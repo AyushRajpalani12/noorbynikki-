@@ -101,6 +101,62 @@ const PRODUCTS = [
     ],
     sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
   },
+
+  {
+  id: 7,
+  name: 'FLORAL PRINTED GEORGETTE SUIT SET',
+  price: '₹3,299',
+  originalPrice: '₹4,699',
+  discount: '30% OFF',
+  colors: [
+    { name: 'Multicolor', hex: '#E29587' }
+  ],
+  images: [
+    '/collection/printed.png',
+    '/collection/printedfront.png',
+    '/collection/printedback.png',
+    '/collection/printedrigth.png',
+    '/collection/printedfeshionside.png',
+  ],
+  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+},
+{
+  id: 8,
+  name: 'FLORAL PRINTED STRAIGHT KURTI SET',
+  price: '₹2,799',
+  originalPrice: '₹3,899',
+  discount: '28% OFF',
+  colors: [
+    { name: 'Multicolor', hex: '#F4A460' }
+  ],
+  images: [
+    '/collection/flowerstrightkurti.png',
+    '/collection/flowerstrightkurtifrontside.png',
+    '/collection/flowerstrightkurtilefrontside.png',
+    '/collection/flowerstrightkurtibackeside.png',
+    '/collection/flowerstrightkurtirightside.png',
+  ],
+  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+}, 
+{
+  id: 9,
+  name: 'GREEN COTTON PRINTED SUIT SET',
+  price: '₹2,999',
+  originalPrice: '₹4,199',
+  discount: '28% OFF',
+  colors: [
+    { name: 'Green', hex: '#2E8B57' }
+  ],
+  images: [
+    '/collection/greencotton.png',
+    '/collection/greencottonfront.png',
+    '/collection/greencottonleft.png',
+    '/collection/greencottonback.png',
+    '/collection/greencottonleftsidegreat.png',
+    '/collection/greencottonrightsidegreat.png',
+  ],
+  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+}
 ];
 
 // Card ke andar Auto-sliding Image Component

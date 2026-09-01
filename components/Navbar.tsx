@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useState } from "react";
 import Link from "next/link";
@@ -9,12 +9,11 @@ export default function Navbar() {
   const { cartCount } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Cleaned up nav links (Removed individual suit categories from header)
   const navLinks = [
     { name: "Home", href: "/" },
-    { name: "Anarkali", href: "/collection?category=anarkali" },
-    { name: "Printed", href: "/collection?category=printed" },
-    { name: "Cotton Kurtis", href: "/collection?category=cotton" },
-    { name: "Party Wear", href: "/collection?category=partywear" },
+    { name: "All Collection", href: "/collection" },
+    { name: "Shope New Latest", href: "/Shopenewlatest" }, // Aap chahein toh ise rakh sakte hain ya hata sakte hain
   ];
 
   return (
@@ -39,8 +38,8 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex space-x-8 font-medium text-gray-700 text-sm tracking-wide">
+          {/* Desktop Navigation Links (Clean & Minimal) */}
+          <nav className="hidden md:flex space-x-10 font-medium text-gray-700 text-sm tracking-wide">
             {navLinks.map((link) => (
               <Link
                 key={link.name}

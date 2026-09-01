@@ -1,143 +1,457 @@
-'use client';
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { MessageCircle, Phone, Mail, MapPin, Heart, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import { MapPin, Phone, Mail } from "lucide-react";
 
 export default function Footer() {
-  const whatsappNumber = '918385973582';
-  const whatsappMessage = encodeURIComponent('Hello! I have a query regarding your ethnic suit collection.');
+  const [year, setYear] = useState<number | string>("");
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
+
+  const whatsappNumber = "918385973582";
+
+  const whatsappMessage = encodeURIComponent(
+    "Hello! I have a query regarding your ethnic suit collection."
+  );
+
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
   return (
-    <footer className="bg-stone-900 text-stone-300 pt-12 pb-6 border-t border-stone-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Top Feature Highlights Bar */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-10 border-b border-stone-800 text-center md:text-left">
-          <div className="flex flex-col md:flex-row items-center gap-3">
-            <div className="p-3 bg-rose-950/60 text-rose-400 rounded-xl border border-rose-900/50">
-              <Truck className="w-5 h-5" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-white uppercase tracking-wider">Free Shipping</h5>
-              <p className="text-[11px] text-stone-400">All India Delivery</p>
+    <footer className="relative overflow-hidden bg-[#f8f3ea] text-[#343434] border-t border-[#e5dccd]">
+      
+      {/* LEFT FLORAL DESIGN */}
+      <img
+        src="/footer-left.png"
+        alt="Floral Left"
+        className="
+          absolute
+          left-0
+          top-0
+          h-full
+          w-[170px]
+          lg:w-[230px]
+          object-cover
+          object-left
+          pointer-events-none
+          select-none
+          hidden
+          md:block
+        "
+      />
+
+      {/* RIGHT FLORAL DESIGN */}
+      <img
+        src="/footer-right.png"
+        alt="Floral Right"
+        className="
+          absolute
+          right-0
+          top-0
+          h-full
+          w-[170px]
+          lg:w-[230px]
+          object-cover
+          object-right
+          pointer-events-none
+          select-none
+          hidden
+          md:block
+        "
+      />
+
+      {/* MAIN CONTAINER */}
+      <div className="relative z-10 max-w-[1250px] mx-auto px-6 md:px-12 lg:px-16">
+
+        {/* FOOTER COLUMNS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-16 pt-14 lg:pt-16 pb-14">
+
+          {/* ================= MY ACCOUNT ================= */}
+          <div>
+            <h4 className="text-[15px] font-medium tracking-[2px] uppercase mb-5">
+              My Account
+            </h4>
+
+            <ul className="space-y-3 text-[14px] text-[#4a4a4a]">
+
+              <li>
+                <Link
+                  href="/account"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  My Account
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/register"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Register
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/login"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Login
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/orders"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  View Order
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/track"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Track Your Shipment
+                </Link>
+              </li>
+
+            </ul>
+
+            {/* PAYMENT METHODS */}
+            <div className="mt-7">
+
+              <h5 className="text-[13px] font-medium tracking-[1px] uppercase mb-3">
+                We Accept
+              </h5>
+
+              <div className="flex items-center gap-1.5 flex-wrap">
+
+                {/* VISA */}
+                <div className="bg-white border border-gray-300 px-2 py-1 text-[9px] font-bold text-blue-800 shadow-sm">
+                  VISA
+                </div>
+
+                {/* MASTERCARD */}
+                <div className="bg-white border border-gray-300 px-1.5 py-1 text-[9px] font-bold">
+                  <span className="text-red-600">Master</span>
+                  <span className="text-yellow-600">Card</span>
+                </div>
+
+                {/* MAESTRO */}
+                <div className="bg-white border border-gray-300 px-1.5 py-1 text-[9px] font-bold text-blue-600">
+                  Maestro
+                </div>
+
+                {/* NET BANKING */}
+                <div className="bg-white border border-gray-300 px-1.5 py-1 text-[8px] font-semibold text-gray-600">
+                  NET
+                  <br />
+                  BANKING
+                </div>
+
+              </div>
+
             </div>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-3">
-            <div className="p-3 bg-emerald-950/60 text-emerald-400 rounded-xl border border-emerald-900/50">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-white uppercase tracking-wider">100% Authentic</h5>
-              <p className="text-[11px] text-stone-400">Premium Handpicked Quality</p>
-            </div>
+
+          {/* ================= CUSTOMER SERVICE ================= */}
+          <div>
+            <h4 className="text-[15px] font-medium tracking-[2px] uppercase mb-5">
+              Customer Service
+            </h4>
+
+            <ul className="space-y-3 text-[14px] text-[#4a4a4a]">
+
+              <li>
+                <Link
+                  href="/privacy-policy"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Privacy Policy
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/terms"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Terms & Condition
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/cancellation-returns"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Cancellation, Shipping & Return Policy
+                </Link>
+              </li>
+
+            </ul>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-3">
-            <div className="p-3 bg-amber-950/60 text-amber-400 rounded-xl border border-amber-900/50">
-              <RotateCcw className="w-5 h-5" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-white uppercase tracking-wider">Easy Returns</h5>
-              <p className="text-[11px] text-stone-400">7-Day Hassle Free Exchange</p>
-            </div>
+
+          {/* ================= INFORMATION ================= */}
+          <div>
+            <h4 className="text-[15px] font-medium tracking-[2px] uppercase mb-5">
+              Information
+            </h4>
+
+            <ul className="space-y-3 text-[14px] text-[#4a4a4a]">
+
+              <li>
+                <Link
+                  href="/about"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  About Us
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/faq"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  FAQ
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/why-us"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Why Choose Us
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/certificate"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Our Certificate
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/how-to-order"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  How To Order
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/logistics"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Logistics Partner
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/contact"
+                  className="flex items-center gap-2 hover:text-[#b27a22] transition-colors duration-300"
+                >
+                  <span className="text-[18px] leading-none">›</span>
+                  Contact Us
+                </Link>
+              </li>
+
+            </ul>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-3">
-            <div className="p-3 bg-sky-950/60 text-sky-400 rounded-xl border border-sky-900/50">
-              <MessageCircle className="w-5 h-5" />
-            </div>
-            <div>
-              <h5 className="text-xs font-bold text-white uppercase tracking-wider">Instant Support</h5>
-              <p className="text-[11px] text-stone-400">Order & Chat via WhatsApp</p>
-            </div>
-          </div>
-        </div>
 
-        {/* Main Footer Links Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 py-10">
-          
-          {/* Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
-            <h3 className="text-xl font-serif font-bold text-white uppercase tracking-wider">
-              ETHNIC <span className="text-rose-400">BOUTIQUE</span>
-            </h3>
-            <p className="text-xs text-stone-400 leading-relaxed max-w-sm">
-              Discover timeless elegance with our exquisite range of Anarkali suits, Rayon print sets, and hand-embroidered ethnic wear crafted for every celebration.
-            </p>
-            <div className="pt-2">
+          {/* ================= CONTACT US ================= */}
+          <div>
+            <h4 className="text-[15px] font-medium tracking-[2px] uppercase mb-5">
+              Contact Us
+            </h4>
+
+            {/* ADDRESS */}
+            <div className="flex items-start gap-3 mb-5">
+
+              <div className="w-10 h-10 shrink-0 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22]">
+                <MapPin size={16} strokeWidth={1.8} />
+              </div>
+
+              <p className="text-[14px] leading-6 text-[#4a4a4a]">
+               Sumit digitech Pvt Ltd Jaipur 
+               MAnsarovar Jaipur , Rajsthan
+              </p>
+
+            </div>
+
+
+            {/* PHONE */}
+            <div className="flex items-center gap-3 mb-4">
+
+              <div className="w-10 h-10 shrink-0 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22]">
+                <Phone size={15} strokeWidth={1.8} />
+              </div>
+
               <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-md"
+                href="tel:+918385973582"
+                className="text-[14px] hover:text-[#b27a22] transition-colors"
               >
-                <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
-                Chat On WhatsApp
+                +91 837748438734
               </a>
+
             </div>
-          </div>
 
-          {/* Quick Links */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white border-b border-rose-500/30 pb-2 inline-block">
-              Quick Links
-            </h4>
-            <ul className="space-y-2 text-xs">
-              <li><Link href="/" className="hover:text-rose-400 transition-colors">Home</Link></li>
-              <li><Link href="/#collection" className="hover:text-rose-400 transition-colors">Most Loved Sets</Link></li>
-              <li><Link href="/product?id=1" className="hover:text-rose-400 transition-colors">Featured Collection</Link></li>
-              <li><Link href="/cart" className="hover:text-rose-400 transition-colors">Shopping Bag</Link></li>
-            </ul>
-          </div>
 
-          {/* Collections */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white border-b border-rose-500/30 pb-2 inline-block">
-              Categories
-            </h4>
-            <ul className="space-y-2 text-xs">
-              <li><Link href="/#collection" className="hover:text-rose-400 transition-colors">Anarkali Suit Sets</Link></li>
-              <li><Link href="/#collection" className="hover:text-rose-400 transition-colors">Printed Rayon Sets</Link></li>
-              <li><Link href="/#collection" className="hover:text-rose-400 transition-colors">Cotton Straight Suits</Link></li>
-              <li><Link href="/#collection" className="hover:text-rose-400 transition-colors">Georgette Festive Wear</Link></li>
-            </ul>
-          </div>
+            {/* EMAIL */}
+            <div className="flex items-center gap-3 mb-5">
 
-          {/* Contact Details */}
-          <div className="space-y-3">
-            <h4 className="text-xs font-bold uppercase tracking-widest text-white border-b border-rose-500/30 pb-2 inline-block">
-              Get In Touch
-            </h4>
-            <ul className="space-y-2.5 text-xs text-stone-400">
-              <li className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>+91 83859 73582</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-rose-400 shrink-0" />
-                <span>support@ethnicboutique.com</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <MapPin className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
-                <span>Rajasthan, India</span>
-              </li>
-            </ul>
+              <div className="w-10 h-10 shrink-0 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22]">
+                <Mail size={15} strokeWidth={1.8} />
+              </div>
+
+              <a
+                href="mailto:Support@Royalexport.in"
+                className="text-[14px] hover:text-[#b27a22] transition-colors"
+              >
+                sumitdigitech@gmail.com
+              </a>
+
+            </div>
+
+
+            {/* SOCIAL MEDIA */}
+            <div className="flex items-center gap-3 mt-5">
+
+              {/* FACEBOOK */}
+              <a
+                href="#"
+                aria-label="Facebook"
+                className="w-10 h-10 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22] hover:bg-[#b27a22] hover:text-white transition-all duration-300"
+              >
+                <svg
+                  className="w-[17px] h-[17px] fill-current"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M14 8h3V4h-3c-3.3 0-6 2.7-6 6v2H5v4h3v8h4v-8h3.5l.5-4H12v-2c0-1.1.9-2 2-2z" />
+                </svg>
+              </a>
+
+
+              {/* PINTEREST */}
+              <a
+                href="#"
+                aria-label="Pinterest"
+                className="w-10 h-10 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22] hover:bg-[#b27a22] hover:text-white transition-all duration-300"
+              >
+                <span className="font-bold text-[16px]">
+                  P
+                </span>
+              </a>
+
+
+              {/* INSTAGRAM */}
+              <a
+                href="#"
+                aria-label="Instagram"
+                className="w-10 h-10 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22] hover:bg-[#b27a22] hover:text-white transition-all duration-300"
+              >
+                <svg
+                  className="w-[17px] h-[17px] fill-current"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M7 2C4.2 2 2 4.2 2 7v10c0 2.8 2.2 5 5 5h10c2.8 0 5-2.2 5-5V7c0-2.8-2.2-5-5-5H7zm10 2c1.7 0 3 1.3 3 3v10c0 1.7-1.3 3-3 3H7c-1.7 0-3-1.3-3-3V7c0-1.7 1.3-3 3-3h10zm-5 3.5A4.5 4.5 0 1 0 12 16.5 4.5 4.5 0 0 0 12 7.5zm0 2A2.5 2.5 0 1 1 12 14.5 2.5 2.5 0 0 1 12 9.5zm5-3a1 1 0 1 0 0 2 1 1 0 0 0 0-2z" />
+                </svg>
+              </a>
+
+
+              {/* YOUTUBE */}
+              <a
+                href="#"
+                aria-label="Youtube"
+                className="w-10 h-10 rounded-full border border-[#c99a48] flex items-center justify-center text-[#b27a22] hover:bg-[#b27a22] hover:text-white transition-all duration-300"
+              >
+                <svg
+                  className="w-[19px] h-[19px] fill-current"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.5 15.6V8.4L15.8 12l-6.3 3.6z" />
+                </svg>
+              </a>
+
+            </div>
+
           </div>
 
         </div>
 
-        {/* Bottom Copyright Bar */}
-        <div className="pt-6 mt-6 border-t border-stone-800 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-4">
-          <p>© {new Date().getFullYear()} Ethnic Boutique. All Rights Reserved.</p>
-          <p className="flex items-center gap-1">
-            Crafted with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for Indian Ethnic Fashion
-          </p>
+
+        {/* COPYRIGHT */}
+        <div className="border-t border-[#ded5c7] py-5 text-left text-[13px] text-[#555]">
+          © {year || "2026"} Royal Export . All Rights Reserved.
         </div>
 
       </div>
+
+
+      {/* FLOATING WHATSAPP BUTTON */}
+      <a
+        href={whatsappUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp Chat"
+        className="
+          fixed
+          bottom-6
+          right-6
+          z-50
+          w-14
+          h-14
+          bg-[#25D366]
+          text-white
+          rounded-full
+          shadow-xl
+          flex
+          items-center
+          justify-center
+          hover:scale-110
+          transition-all
+          duration-300
+        "
+      >
+        <svg
+          className="w-7 h-7 fill-current"
+          viewBox="0 0 24 24"
+        >
+          <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+        </svg>
+      </a>
+
     </footer>
   );
 }

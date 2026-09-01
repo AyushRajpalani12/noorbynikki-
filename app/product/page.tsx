@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Heart, ShieldCheck, Truck, RotateCcw, ChevronDown, ChevronUp, MessageCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import ImageZoom from '@/components/ImageZoom';
 
 // Centralized Products List
 const PRODUCTS_DATA = [
@@ -55,9 +56,7 @@ const PRODUCTS_DATA = [
     price: '₹2,999',
     originalPrice: '₹4,299',
     discount: '30% OFF',
-    colors: [
-      { name: 'Purple', hex: '#6b3064' }
-    ],
+    colors: [{ name: 'Purple', hex: '#6b3064' }],
     images: [
       '/collection/purpalrayonprinted.png',
       '/collection/purpalrayonprintedfrontside.png',
@@ -73,9 +72,7 @@ const PRODUCTS_DATA = [
     price: '₹3,599',
     originalPrice: '₹4,999',
     discount: '28% OFF',
-    colors: [
-      { name: 'Mango Yellow', hex: '#FFC82E' }
-    ],
+    colors: [{ name: 'Mango Yellow', hex: '#FFC82E' }],
     images: [
       '/collection/Mangoanarkal.png',
       '/collection/Mangoanarkalfrontside.png',
@@ -91,9 +88,7 @@ const PRODUCTS_DATA = [
     price: '₹3,199',
     originalPrice: '₹4,499',
     discount: '28% OFF',
-    colors: [
-      { name: 'Light Pink', hex: '#FFB6C1' }
-    ],
+    colors: [{ name: 'Light Pink', hex: '#FFB6C1' }],
     images: [
       '/collection/lightpink.png',
       '/collection/lightpinkfront.png',
@@ -120,18 +115,135 @@ const PRODUCTS_DATA = [
     ],
     sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
   },
+  {
+    id: 7,
+    name: 'FLORAL PRINTED GEORGETTE SUIT SET',
+    price: '₹3,299',
+    originalPrice: '₹4,699',
+    discount: '30% OFF',
+    colors: [{ name: 'Multicolor', hex: '#E29587' }],
+    images: [
+      '/collection/printed.png',
+      '/collection/printedfront.png',
+      '/collection/printedback.png',
+      '/collection/printedrigth.png',
+      '/collection/printedfeshionside.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  },
+  {
+    id: 8,
+    name: 'FLORAL PRINTED STRAIGHT KURTI SET',
+    price: '₹2,799',
+    originalPrice: '₹3,899',
+    discount: '28% OFF',
+    colors: [{ name: 'Multicolor', hex: '#F4A460' }],
+    images: [
+      '/collection/flowerstrightkurti.png',
+      '/collection/flowerstrightkurtifrontside.png',
+      '/collection/flowerstrightkurtilefrontside.png',
+      '/collection/flowerstrightkurtibackeside.png',
+      '/collection/flowerstrightkurtirightside.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  },
+  {
+    id: 9,
+    name: 'GREEN COTTON PRINTED SUIT SET',
+    price: '₹2,999',
+    originalPrice: '₹4,199',
+    discount: '28% OFF',
+    colors: [{ name: 'Green', hex: '#2E8B57' }],
+    images: [
+      '/collection/greencotton.png',
+      '/collection/greencottonfront.png',
+      '/collection/greencottonleft.png',
+      '/collection/greencottonback.png',
+      '/collection/greencottonleftsidegreat.png',
+      '/collection/greencottonrightsidegreat.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  },
+  {
+    id: 10,
+    name: 'DARK RED FLORAL PRINTED SUIT SET',
+    price: '₹3,499',
+    originalPrice: '₹4,999',
+    discount: '30% OFF',
+    colors: [{ name: 'Dark Red', hex: '#8B0000' }],
+    images: [
+      '/collection/darkredflower.png',
+      '/collection/darkredflowerfront.png',
+      '/collection/darkredflowerleft.png',
+      '/collection/darkredflowerright.png',
+      '/collection/darkredflowerback.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  },
+  {
+    id: 11,
+    name: 'ANGRAKHA FESTIVAL ANARKALI SUIT SET',
+    price: '₹3,499',
+    originalPrice: '₹4,999',
+    discount: '30% OFF',
+    colors: [{ name: 'Festival Red', hex: '#9B111E' }],
+    images: [
+      '/collection/angrakhafestivalanrkal.png',
+      '/collection/angrakhafestivalanrkalfrontside.png',
+      '/collection/angrakhafestivalanrkalleftside.png',
+      '/collection/angrakhafestivalanrkalrightside.png',
+      '/collection/angrakhafestivalanrkaloutlokingside.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Traditional Angrakha style Anarkali suit set with heavy dupatta, intricate borders and regal festival flair.',
+    fabric: 'Silk Blend / Georgette',
+    fit: 'Anarkali Fit',
+  },
+  {
+    id: 12,
+    name: 'OFF WHITE STRAIGHT SUIT SET',
+    price: '₹3,499',
+    originalPrice: '₹4,999',
+    discount: '30% OFF',
+    colors: [{ name: 'Off White', hex: '#FAF9F6' }],
+    images: [
+      '/collection/offwhitestright.png',
+      '/collection/offwhitestrightfront.png',
+      '/collection/offwhitestrightright.png',
+      '/collection/offwhitestrightback.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Elegantly crafted Off White Straight Suit Set featuring graceful embroidery and fine tailoring for festive and casual occasions.',
+    fabric: 'Cotton Blend / Chiffon',
+    fit: 'Straight Fit',
+  },
+  {
+    id: 13,
+    name: 'ELEGANT PRINTED SUIT SET',
+    price: '₹3,499',
+    originalPrice: '₹4,999',
+    discount: '30% OFF',
+    mainImage: '/collection/printed1.png',
+    images: [
+      '/collection/printed1.png',
+      '/collection/printed1front.png',
+      '/collection/printed1left.png',
+      '/collection/printed1right.png',
+      '/collection/printed1back.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Stylish printed suit set with fine detailing and elegant everyday look.',
+  },
 ];
 
 function ProductContent() {
   const searchParams = useSearchParams();
   const productId = Number(searchParams.get('id')) || 1;
 
-  // Find selected product or default to first
   const product = PRODUCTS_DATA.find((p) => p.id === productId) || PRODUCTS_DATA[0];
 
   const { addToCart } = useCart();
 
-  // Safe Initial States using Optional Chaining
   const [selectedImage, setSelectedImage] = useState(product?.images?.[0] || '');
   const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || null);
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || '');
@@ -184,7 +296,6 @@ function ProductContent() {
     setTimeout(() => setShowToast(false), 3000);
   };
 
-  // WHATSAPP ORDER LINK GENERATOR
   const whatsappNumber = '918385973582';
   const whatsappMessage = encodeURIComponent(
     `Hello! I want to order:\n\n*Product:* ${product.name}\n*Price:* ${product.price}\n*Size:* ${selectedSize || 'N/A'}`
@@ -208,7 +319,7 @@ function ProductContent() {
 
   return (
     <div className="bg-gray-50 min-h-screen py-6 px-4 sm:px-6 lg:px-8 text-gray-800">
-      
+
       {/* Toast Notification */}
       {showToast && (
         <div className="fixed top-5 right-5 z-50 bg-emerald-600 text-white px-5 py-3 rounded-lg shadow-xl flex items-center gap-2 animate-bounce">
@@ -223,9 +334,9 @@ function ProductContent() {
       </div>
 
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-gray-100">
-        
-        {/* LEFT: Gallery */}
-        <div className="lg:col-span-5 flex gap-4">
+
+        {/* LEFT: Gallery (ZOOM INTEGRATED) */}
+        <div className="lg:col-span-5 flex gap-4 relative">
           <div className="flex flex-col gap-2 overflow-y-auto max-h-[500px]">
             {product.images?.map((img, idx) => (
               <button
@@ -240,13 +351,13 @@ function ProductContent() {
             ))}
           </div>
 
-          <div className="relative flex-1 h-[500px] rounded-lg overflow-hidden bg-gray-50 border border-gray-100">
+          <div className="relative flex-1">
             {selectedImage && (
-              <Image src={selectedImage} alt={product.name} fill className="object-cover object-top" />
+              <ImageZoom src={selectedImage} alt={product.name} images={product.images} />
             )}
             <button
               onClick={() => setIsWishlisted(!isWishlisted)}
-              className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all"
+              className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all z-10"
             >
               <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-gray-600'}`} />
             </button>
@@ -324,8 +435,7 @@ function ProductContent() {
             >
               Add To Bag
             </button>
-            
-            {/* WHATSAPP BUTTON */}
+
             <a
               href={whatsappUrl}
               target="_blank"
