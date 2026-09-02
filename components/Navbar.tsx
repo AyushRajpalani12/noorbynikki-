@@ -2,18 +2,21 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ShoppingBag, Search, User, Menu, X, ChevronRight } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
   const { cartCount } = useCart();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
-  // Cleaned up nav links (Removed individual suit categories from header)
+  // Navigation links including the new bright page route (/bright)
   const navLinks = [
     { name: "Home", href: "/" },
     { name: "All Collection", href: "/collection" },
-    { name: "Shope New Latest", href: "/Shopenewlatest" }, // Aap chahein toh ise rakh sakte hain ya hata sakte hain
+    { name: "Shope New Latest", href: "/Shopenewlatest" },
+    { name: "Bright", href: "/bright" }, // Naya Bright page link
   ];
 
   return (
@@ -38,17 +41,26 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Navigation Links (Clean & Minimal) */}
-          <nav className="hidden md:flex space-x-10 font-medium text-gray-700 text-sm tracking-wide">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                href={link.href}
-                className="hover:text-rose-600 transition-colors"
-              >
-                {link.name}
-              </Link>
-            ))}
+          {/* Desktop Navigation Links with Active Underline Effect */}
+          <nav className="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
+            {navLinks.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.name}
+                  href={link.href}
+                  className={`relative py-1 transition-colors ${
+                    isActive ? "text-rose-600 font-semibold" : "text-gray-700 hover:text-rose-600"
+                  }`}
+                >
+                  {link.name}
+                  {/* Active Page Animated Underline */}
+                  {isActive && (
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-rose-600 rounded-full animate-fadeIn" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Right Action Icons */}
@@ -115,19 +127,26 @@ export default function Navbar() {
                 </button>
               </div>
 
-              {/* Drawer Links List */}
+              {/* Drawer Links List with Active State */}
               <nav className="p-4 space-y-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl text-gray-800 font-medium text-sm hover:bg-rose-50 hover:text-rose-600 transition-all"
-                  >
-                    <span>{link.name}</span>
-                    <ChevronRight className="w-4 h-4 text-gray-400" />
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link
+                      key={link.name}
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center justify-between px-4 py-3 rounded-xl font-medium text-sm transition-all ${
+                        isActive
+                          ? "bg-rose-50 text-rose-600 font-semibold"
+                          : "text-gray-800 hover:bg-gray-50 hover:text-rose-600"
+                      }`}
+                    >
+                      <span>{link.name}</span>
+                      <ChevronRight className={`w-4 h-4 ${isActive ? "text-rose-600" : "text-gray-400"}`} />
+                    </Link>
+                  );
+                })}
               </nav>
             </div>
 
@@ -139,7 +158,7 @@ export default function Navbar() {
                 className="flex items-center justify-between w-full bg-rose-600 text-white font-semibold py-3 px-4 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-rose-700 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4" />
+                  <ShoppingBag className="url w-4 h-4" />
                   <span>View Shopping Bag</span>
                 </div>
                 <span className="bg-white/20 px-2 py-0.5 rounded-full text-[10px]">

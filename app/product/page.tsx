@@ -234,6 +234,81 @@ const PRODUCTS_DATA = [
     sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
     description: 'Stylish printed suit set with fine detailing and elegant everyday look.',
   },
+  {
+    id: 501,
+    name: 'EXCLUSIVE DESIGNER FESTIVE SUIT SET',
+    price: '₹3,799',
+    originalPrice: '₹5,299',
+    discount: '28% OFF',
+    colors: [{ name: 'Festive Pink', hex: '#D2691E' }],
+    images: [
+      '/collection/11.png',
+      '/collection/12.png',
+      '/collection/13.png',
+      '/collection/14.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Exclusive festive suit set featuring delicate craftsmanship, rich fabric, and modern ethnic look.',
+    fabric: 'Pure Georgette',
+    fit: 'Designer Fit',
+  },
+  {
+    id: 502,
+    name: 'VIBRANT ORANGE FESTIVE SUIT SET',
+    price: '₹3,599',
+    originalPrice: '₹4,999',
+    discount: '28% OFF',
+    colors: [{ name: 'Orange', hex: '#ec5a0c' }],
+    images: [
+      '/collection/orange1.png',
+      '/collection/orange1front.png',
+      '/collection/orange1right.png',
+      '/collection/orange1view.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Vibrant orange ethnic suit set with intricate embroidery and elegant drape.',
+    fabric: 'Georgette / Cotton Blend',
+    fit: 'Straight Fit',
+  },
+  {
+    id: 503,
+    name: 'ELEGANT NAVY BLUE SUIT SET',
+    price: '₹3,699',
+    originalPrice: '₹5,199',
+    discount: '28% OFF',
+    colors: [{ name: 'Navy Blue', hex: '#000080' }],
+    images: [
+      '/collection/frontsideneveyblue.png',
+      '/collection/glasideneveyblue.png',
+      '/collection/leftsideblue.png',
+      '/collection/backsideblue.png',
+      '/collection/rightsideblue.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Sophisticated navy blue suit set crafted with fine detailing and premium fabric for a graceful ethnic look.',
+    fabric: 'Georgette / Rayon',
+    fit: 'Straight Fit',
+  },
+  {
+    id: 504,
+    name: 'STUNNING RANI COLOR FESTIVE SUIT SET',
+    price: '₹3,899',
+    originalPrice: '₹5,499',
+    discount: '29% OFF',
+    colors: [{ name: 'Rani Pink', hex: '#E30066' }],
+    images: [
+      '/collection/ranicolor.png',
+      '/collection/ranicolorgla.png',
+      '/collection/ranicolorleft.png',
+      '/collection/ranicolorback.png',
+      '/collection/ranicolorsitting.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+    description: 'Vibrant and regal Rani color festive suit set designed with intricate detailing and rich texture for special occasions.',
+    fabric: 'Pure Georgette / Silk Blend',
+    fit: 'Designer Fit',
+  },
+
 ];
 
 function ProductContent() {
@@ -333,195 +408,207 @@ function ProductContent() {
         <Link href="/" className="hover:text-rose-600">Home</Link> / <Link href="/" className="hover:text-rose-600">Suit Sets</Link> / <span className="text-gray-800 font-semibold">{product.name}</span>
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-gray-100">
+      {/*
+        Gallery + Product Info + Specifications are back in ONE row
+        (grid-cols-12), side-by-side. This is safe now because ImageZoom's
+        magnifier renders as an overlay directly on top of the product
+        image (absolute inset-0 inside the same container) instead of
+        popping out to the right — so it never needs extra width and can't
+        cover the Info/Specs columns next to it.
+      */}
+      <div className="max-w-7xl mx-auto bg-white p-4 sm:p-8 rounded-xl shadow-sm border border-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-        {/* LEFT: Gallery (ZOOM INTEGRATED) */}
-        <div className="lg:col-span-5 flex gap-4 relative">
-          <div className="flex flex-col gap-2 overflow-y-auto max-h-[500px]">
-            {product.images?.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedImage(img)}
-                className={`relative w-16 h-20 rounded border transition-all ${
-                  selectedImage === img ? 'border-rose-600 ring-2 ring-rose-100' : 'border-gray-200 opacity-80 hover:opacity-100'
-                }`}
-              >
-                <Image src={img} alt={`thumb-${idx}`} fill className="object-cover object-top rounded" />
-              </button>
-            ))}
-          </div>
-
-          <div className="relative flex-1">
-            {selectedImage && (
-              <ImageZoom src={selectedImage} alt={product.name} images={product.images} />
-            )}
-            <button
-              onClick={() => setIsWishlisted(!isWishlisted)}
-              className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all z-10"
-            >
-              <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-gray-600'}`} />
-            </button>
-          </div>
-        </div>
-
-        {/* MIDDLE: Product Info */}
-        <div className="lg:col-span-4 flex flex-col space-y-5">
-          <div>
-            <h1 className="text-xl font-bold font-serif text-gray-900 uppercase tracking-wide leading-snug">
-              {product.name}
-            </h1>
-            <div className="flex items-center gap-3 mt-2">
-              <span className="text-2xl font-bold text-gray-900">{product.price}</span>
-              <span className="text-sm text-gray-400 line-through">MRP {product.originalPrice}</span>
-              <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">
-                {product.discount}
-              </span>
-            </div>
-            <p className="text-xs text-gray-400 mt-1">Inclusive of all taxes</p>
-          </div>
-
-          {/* Color Selector */}
-          {product.colors && product.colors.length > 0 && (
-            <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-700 block mb-2">
-                Select Color: <span className="font-normal text-gray-500">{selectedColor?.name}</span>
-              </span>
-              <div className="flex items-center gap-3">
-                {product.colors.map((c) => (
+          {/* Gallery */}
+          <div className="lg:col-span-5">
+            <div className="flex gap-4">
+              <div className="flex flex-col gap-2 overflow-y-auto max-h-[500px]">
+                {product.images?.map((img, idx) => (
                   <button
-                    key={c.name}
-                    onClick={() => setSelectedColor(c)}
-                    className={`w-8 h-8 rounded-full border-2 transition-transform ${
-                      selectedColor?.name === c.name ? 'border-rose-600 scale-110 shadow-sm' : 'border-gray-300'
-                    }`}
-                    style={{ backgroundColor: c.hex }}
-                    title={c.name}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Size Selector */}
-          {product.sizes && product.sizes.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-gray-700">Select Size</span>
-                <button className="text-xs text-rose-600 underline font-medium">Size Chart</button>
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                {product.sizes.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSelectedSize(s)}
-                    className={`py-2 text-xs font-semibold rounded border transition-all ${
-                      selectedSize === s
-                        ? 'bg-rose-700 text-white border-rose-700 shadow-sm'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-rose-400'
+                    key={idx}
+                    onClick={() => setSelectedImage(img)}
+                    className={`relative w-16 h-20 rounded border transition-all ${
+                      selectedImage === img ? 'border-rose-600 ring-2 ring-rose-100' : 'border-gray-200 opacity-80 hover:opacity-100'
                     }`}
                   >
-                    {s}
+                    <Image src={img} alt={`thumb-${idx}`} fill className="object-cover object-top rounded" />
                   </button>
                 ))}
               </div>
+
+              <div className="relative flex-1">
+                {selectedImage && (
+                  <ImageZoom src={selectedImage} alt={product.name} images={product.images} />
+                )}
+                <button
+                  onClick={() => setIsWishlisted(!isWishlisted)}
+                  className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all z-30"
+                >
+                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-gray-600'}`} />
+                </button>
+              </div>
             </div>
-          )}
-
-          {/* CTAs */}
-          <div className="flex gap-3 pt-2">
-            <button
-              onClick={handleAddToCart}
-              className="flex-1 border-2 border-rose-700 text-rose-700 hover:bg-rose-50 font-bold py-3.5 rounded text-xs uppercase tracking-wider transition-colors"
-            >
-              Add To Bag
-            </button>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded text-xs uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
-              Order on WhatsApp
-            </a>
           </div>
 
-          {/* Delivery & Pincode Checker */}
-          <div className="border border-gray-200 rounded-lg p-4 bg-gray-50/50 space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
-              <Truck className="w-4 h-4 text-rose-600" /> Delivery Options
-            </span>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                maxLength={6}
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value)}
-                placeholder="Enter 6-digit Pincode"
-                className="border border-gray-300 rounded px-3 py-1.5 text-xs flex-1 focus:outline-none focus:border-rose-600"
-              />
-              <button
-                onClick={handleCheckPincode}
-                className="bg-gray-800 text-white px-4 py-1.5 rounded text-xs font-bold hover:bg-gray-900 transition-colors"
-              >
-                CHECK
-              </button>
+          {/* Product Info */}
+          <div className="lg:col-span-4 flex flex-col space-y-5">
+            <div>
+              <h1 className="text-xl font-bold font-serif text-gray-900 uppercase tracking-wide leading-snug">
+                {product.name}
+              </h1>
+              <div className="flex items-center gap-3 mt-2">
+                <span className="text-2xl font-bold text-gray-900">{product.price}</span>
+                <span className="text-sm text-gray-400 line-through">MRP {product.originalPrice}</span>
+                <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">
+                  {product.discount}
+                </span>
+              </div>
+              <p className="text-xs text-gray-400 mt-1">Inclusive of all taxes</p>
             </div>
-            {pincodeError && <p className="text-[11px] text-rose-600 font-medium">{pincodeError}</p>}
-            {deliveryDate && <p className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 p-2 rounded">{deliveryDate}</p>}
-          </div>
 
-          <div className="grid grid-cols-2 gap-3 text-xs text-gray-600 pt-1">
-            <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% Authentic</div>
-            <div className="flex items-center gap-2"><RotateCcw className="w-4 h-4 text-emerald-600" /> 7 Days Easy Return</div>
-          </div>
-        </div>
-
-        {/* RIGHT SIDEBAR */}
-        <div className="lg:col-span-3 border-l border-gray-200 pl-0 lg:pl-6 space-y-4">
-          <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 pb-1 border-b">
-            Specifications & Details
-          </h3>
-
-          <div className="border-b pb-3">
-            <button
-              onClick={() => toggleSection('details')}
-              className="w-full flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-800"
-            >
-              <span>Product Details</span>
-              {openSections.details ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
-            {openSections.details && (
-              <p className="mt-2 text-xs text-gray-600 leading-relaxed">
-                Radiate understated elegance in this exquisite suit set, a perfect fusion of modern refinement and timeless tradition.
-              </p>
-            )}
-          </div>
-
-          <div className="border-b pb-3">
-            <button
-              onClick={() => toggleSection('specs')}
-              className="w-full flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-800"
-            >
-              <span>Key Attributes</span>
-              {openSections.specs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-            </button>
-            {openSections.specs && (
-              <div className="mt-2 space-y-1.5 text-xs text-gray-600">
-                <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="font-medium text-gray-500">Fit</span>
-                  <span className="font-semibold text-gray-800">Straight Fit</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-gray-100">
-                  <span className="font-medium text-gray-500">Fabric</span>
-                  <span className="font-semibold text-gray-800">Georgette / Rayon</span>
+            {/* Color Selector */}
+            {product.colors && product.colors.length > 0 && (
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-gray-700 block mb-2">
+                  Select Color: <span className="font-normal text-gray-500">{selectedColor?.name}</span>
+                </span>
+                <div className="flex items-center gap-3">
+                  {product.colors.map((c) => (
+                    <button
+                      key={c.name}
+                      onClick={() => setSelectedColor(c)}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform ${
+                        selectedColor?.name === c.name ? 'border-rose-600 scale-110 shadow-sm' : 'border-gray-300'
+                      }`}
+                      style={{ backgroundColor: c.hex }}
+                      title={c.name}
+                    />
+                  ))}
                 </div>
               </div>
             )}
-          </div>
-        </div>
 
+            {/* Size Selector */}
+            {product.sizes && product.sizes.length > 0 && (
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-gray-700">Select Size</span>
+                  <button className="text-xs text-rose-600 underline font-medium">Size Chart</button>
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+                  {product.sizes.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSelectedSize(s)}
+                      className={`py-2 text-xs font-semibold rounded border transition-all ${
+                        selectedSize === s
+                          ? 'bg-rose-700 text-white border-rose-700 shadow-sm'
+                          : 'bg-white text-gray-700 border-gray-300 hover:border-rose-400'
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* CTAs */}
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={handleAddToCart}
+                className="flex-1 border-2 border-rose-700 text-rose-700 hover:bg-rose-50 font-bold py-3.5 rounded text-xs uppercase tracking-wider transition-colors"
+              >
+                Add To Bag
+              </button>
+
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded text-xs uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
+              >
+                <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                Order on WhatsApp
+              </a>
+            </div>
+
+            {/* Delivery & Pincode Checker */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-gray-50/50 space-y-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
+                <Truck className="w-4 h-4 text-rose-600" /> Delivery Options
+              </span>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  maxLength={6}
+                  value={pincode}
+                  onChange={(e) => setPincode(e.target.value)}
+                  placeholder="Enter 6-digit Pincode"
+                  className="border border-gray-300 rounded px-3 py-1.5 text-xs flex-1 focus:outline-none focus:border-rose-600"
+                />
+                <button
+                  onClick={handleCheckPincode}
+                  className="bg-gray-800 text-white px-4 py-1.5 rounded text-xs font-bold hover:bg-gray-900 transition-colors"
+                >
+                  CHECK
+                </button>
+              </div>
+              {pincodeError && <p className="text-[11px] text-rose-600 font-medium">{pincodeError}</p>}
+              {deliveryDate && <p className="text-[11px] text-emerald-700 font-semibold bg-emerald-50 p-2 rounded">{deliveryDate}</p>}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-xs text-gray-600 pt-1">
+              <div className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 text-emerald-600" /> 100% Authentic</div>
+              <div className="flex items-center gap-2"><RotateCcw className="w-4 h-4 text-emerald-600" /> 7 Days Easy Return</div>
+            </div>
+          </div>
+
+          {/* Specifications sidebar */}
+          <div className="lg:col-span-3 border-t lg:border-t-0 lg:border-l border-gray-200 pt-4 lg:pt-0 lg:pl-6 space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400 pb-1 border-b">
+              Specifications & Details
+            </h3>
+
+            <div className="border-b pb-3">
+              <button
+                onClick={() => toggleSection('details')}
+                className="w-full flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-800"
+              >
+                <span>Product Details</span>
+                {openSections.details ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+              {openSections.details && (
+                <p className="mt-2 text-xs text-gray-600 leading-relaxed">
+                  Radiate understated elegance in this exquisite suit set, a perfect fusion of modern refinement and timeless tradition.
+                </p>
+              )}
+            </div>
+
+            <div className="border-b pb-3">
+              <button
+                onClick={() => toggleSection('specs')}
+                className="w-full flex justify-between items-center text-xs font-bold uppercase tracking-wider text-gray-800"
+              >
+                <span>Key Attributes</span>
+                {openSections.specs ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+              </button>
+              {openSections.specs && (
+                <div className="mt-2 space-y-1.5 text-xs text-gray-600">
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="font-medium text-gray-500">Fit</span>
+                    <span className="font-semibold text-gray-800">Straight Fit</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-gray-100">
+                    <span className="font-medium text-gray-500">Fabric</span>
+                    <span className="font-semibold text-gray-800">Georgette / Rayon</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* FAQs Section */}
