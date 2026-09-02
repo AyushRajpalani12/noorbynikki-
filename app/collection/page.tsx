@@ -3,10 +3,12 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import CollectionSection from '@/components/CollectionSection';
 import { useSearchParams } from 'next/navigation';
 import { Heart, Search, Eye, MessageCircle, ArrowDown } from 'lucide-react';
 import { PRODUCTS_DATA } from '@/app/product/data';
 import ArchCard from '@/components/ArchCard';
+import VideoShowcase from '@/components/VideoShowcase';
 
 function CardImageSlider({ images, alt }: { images: string[]; alt: string }) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
@@ -99,43 +101,11 @@ function CollectionContent() {
   };
 
   return (
+    
     <div className="min-h-screen bg-white pb-12">
+         <CollectionSection/>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         
-        {/* GRAND OUR COLLECTION BANNER WITH FLOWER DECORATIONS */}
-        <div className="relative flex items-center justify-center my-6 py-12 sm:py-16 overflow-hidden min-h-[220px] bg-[#FAF7F2] rounded-3xl border border-[#EFEADF] shadow-md">
-          <div className="hidden sm:block absolute left-0 top-0 bottom-0 w-48 sm:w-64 md:w-80 pointer-events-none">
-            <Image
-              src="/footer-left.png"
-              alt="Floral Left Accent"
-              fill
-              className="object-contain object-left"
-            />
-          </div>
-
-          <div className="text-center z-10 px-6 py-3">
-            <h2 className="text-3xl sm:text-5xl md:text-6xl font-serif font-bold text-gray-900 tracking-widest uppercase drop-shadow-sm">
-              OUR COLLECTION
-            </h2>
-            <div className="flex items-center justify-center space-x-4 mt-4">
-              <span className="h-[2px] w-24 bg-rose-500"></span>
-              <span className="text-rose-500 text-xl">🌸</span>
-              <span className="h-[2px] w-24 bg-rose-500"></span>
-            </div>
-            <p className="text-xs sm:text-sm text-gray-500 font-sans tracking-widest uppercase mt-3">
-              Explore Our Handcrafted Ethnic Range
-            </p>
-          </div>
-
-          <div className="hidden sm:block absolute right-0 top-0 bottom-0 w-48 sm:w-64 md:w-80 pointer-events-none">
-            <Image
-              src="/footer-right.png"
-              alt="Floral Right Accent"
-              fill
-              className="object-contain object-right"
-            />
-          </div>
-        </div>
 
         {/* 4 ARCH CARDS GRID (Anarkali, Printed, Cotton Kurti, Party Wear) */}
         <div className="mb-14 mt-8">
@@ -151,7 +121,8 @@ function CollectionContent() {
             ))}
           </div>
         </div>
-
+        
+<VideoShowcase />
         {/* CATEGORY FILTERS & SEARCH */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-gray-50 p-4 rounded-2xl border border-gray-100 mb-10 shadow-sm">
           <div className="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0 scrollbar-none">
@@ -274,37 +245,38 @@ function CollectionContent() {
 
       </div>
 
-      {/* HERO BANNER AT THE BOTTOM */}
-      <div className="relative w-full h-[350px] sm:h-[420px] md:h-[480px] lg:h-[520px] overflow-hidden shadow-sm mt-12">
-        <Image
-          src="/collectionhomepage.png"
-          alt="Collection Header Banner"
-          fill
-          priority
-          className="object-cover object-center w-full h-full"
-        />
+   {/* HERO BANNER AT THE BOTTOM */}
+    <div className="relative w-full h-[350px] sm:h-[420px] md:h-[480px] lg:h-[520px] overflow-hidden shadow-md mt-12">
+      <Image
+        src="/collectionhomepage.png"
+        alt="Collection Header Banner"
+        fill
+        priority
+        className="object-cover object-center w-full h-full brightness-[1.05] contrast-[1.05]"
+      />
+      
+      {/* Balanced gradient overlay for sharp image visibility and crystal clear text */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 flex flex-col items-center justify-center text-center px-4">
+        <span className="text-rose-200 font-semibold tracking-widest text-xs uppercase mb-2 drop-shadow-md">
+          Elegance In Every Detail
+        </span>
+        <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-wide max-w-2xl leading-tight drop-shadow-lg">
+          Exclusive Royal Collection
+        </h1>
+        <p className="text-gray-100 text-sm sm:text-base mt-3 max-w-lg font-light drop-shadow">
+          Discover our handpicked traditional suits, custom designer kurtis, and timeless Ethnic wear created for every occasion.
+        </p>
         
-        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-4">
-          <span className="text-rose-300 font-semibold tracking-widest text-xs uppercase mb-2">
-            Elegance In Every Detail
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-wide max-w-2xl leading-tight">
-            Exclusive Royal Collection
-          </h1>
-          <p className="text-gray-200 text-sm sm:text-base mt-3 max-w-lg font-light">
-            Discover our handpicked traditional suits, custom designer kurtis, and timeless Ethnic wear created for every occasion.
-          </p>
-          
-          <button
-            suppressHydrationWarning
-            onClick={scrollToProducts}
-            className="mt-6 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm uppercase tracking-wider"
-          >
-            Explore Our Products
-            <ArrowDown className="w-4 h-4 animate-bounce" />
-          </button>
-        </div>
+        <button
+          suppressHydrationWarning
+          onClick={scrollToProducts}
+          className="mt-6 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-8 rounded-full shadow-xl transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm uppercase tracking-wider"
+        >
+          Explore Our Products
+          <ArrowDown className="w-4 h-4 animate-bounce" />
+        </button>
       </div>
+    </div>
 
     </div>
   );
