@@ -9,16 +9,14 @@ interface CollectionItem {
   link: string;
 }
 
-
- const collections: CollectionItem[] = [
-  { id: 1, title: 'Anarkali Kurtis', image: '/anarkalikurti.png', link: '/category/anarkali' },
-  { id: 2, title: 'A-Line Kurtis', image: '/alinekurti.png', link: '/category/a-line' },
-  { id: 3, title: 'Classic Kurtis', image: '/classickurti1.png', link: '/category/classic' },
-  { id: 4, title: 'Printed Kurtis', image: '/printendkurti.png', link: '/category/printed' },
-  { id: 5, title: 'Party Wear Kurtis', image: '/partwearkurti.png', link: '/category/party-wear' },
-  { id: 6, title: 'Suit Set Kurtis', image: '/sutset.png', link: '/category/suit-sets' },
+const collections: CollectionItem[] = [
+  { id: 1, title: 'Anarkali Kurtis', image: '/anarkalikurti.png', link: '/collection' },
+  { id: 2, title: 'A-Line Kurtis', image: '/alinekurti.png', link: '/collection' },
+  { id: 3, title: 'Classic Kurtis', image: '/classickurti1.png', link: '/collection' },
+  { id: 4, title: 'Printed Kurtis', image: '/printendkurti.png', link: '/collection' },
+  { id: 5, title: 'Party Wear Kurtis', image: '/partwearkurti.png', link: '/collection' },
+  { id: 6, title: 'Suit Set Kurtis', image: '/sutset.png', link: '/collection' },
 ];
-
 
 export default function ExploreCollections() {
   return (

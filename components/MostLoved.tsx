@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Heart, Eye, MessageCircle } from 'lucide-react';
 import ProductQuickView from './ProductQuickView';
+import { useWishlist } from '@/context/WishlistContext';
 
 const PRODUCTS = [
   {
@@ -101,65 +102,57 @@ const PRODUCTS = [
     ],
     sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
   },
-
   {
-  id: 7,
-  name: 'FLORAL PRINTED GEORGETTE SUIT SET',
-  price: '₹3,299',
-  originalPrice: '₹4,699',
-  discount: '30% OFF',
-  colors: [
-    { name: 'Multicolor', hex: '#E29587' }
-  ],
-  images: [
-    '/collection/printed.png',
-    '/collection/printedfront.png',
-    '/collection/printedback.png',
-    '/collection/printedrigth.png',
-    '/collection/printedfeshionside.png',
-  ],
-  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
-},
-{
-  id: 8,
-  name: 'FLORAL PRINTED STRAIGHT KURTI SET',
-  price: '₹2,799',
-  originalPrice: '₹3,899',
-  discount: '28% OFF',
-  colors: [
-    { name: 'Multicolor', hex: '#F4A460' }
-  ],
-  images: [
-    '/collection/flowerstrightkurti.png',
-    '/collection/flowerstrightkurtifrontside.png',
-    '/collection/flowerstrightkurtilefrontside.png',
-    '/collection/flowerstrightkurtibackeside.png',
-    '/collection/flowerstrightkurtirightside.png',
-  ],
-  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
-}, 
-{
-  id: 9,
-  name: 'GREEN COTTON PRINTED SUIT SET',
-  price: '₹2,999',
-  originalPrice: '₹4,199',
-  discount: '28% OFF',
-  colors: [
-    { name: 'Green', hex: '#2E8B57' }
-  ],
-  images: [
-    '/collection/greencotton.png',
-    '/collection/greencottonfront.png',
-    '/collection/greencottonleft.png',
-    '/collection/greencottonback.png',
-    '/collection/greencottonleftsidegreat.png',
-    '/collection/greencottonrightsidegreat.png',
-  ],
-  sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
-}
+    id: 7,
+    name: 'FLORAL PRINTED GEORGETTE SUIT SET',
+    price: '₹3,299',
+    originalPrice: '₹4,699',
+    discount: '30% OFF',
+    colors: [{ name: 'Multicolor', hex: '#E29587' }],
+    images: [
+      '/collection/printed.png',
+      '/collection/printedfront.png',
+      '/collection/printedback.png',
+      '/collection/printedrigth.png',
+      '/collection/printedfeshionside.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  },
+  {
+    id: 8,
+    name: 'FLORAL PRINTED STRAIGHT KURTI SET',
+    price: '₹2,799',
+    originalPrice: '₹3,899',
+    discount: '28% OFF',
+    colors: [{ name: 'Multicolor', hex: '#F4A460' }],
+    images: [
+      '/collection/flowerstrightkurti.png',
+      '/collection/flowerstrightkurtifrontside.png',
+      '/collection/flowerstrightkurtilefrontside.png',
+      '/collection/flowerstrightkurtibackeside.png',
+      '/collection/flowerstrightkurtirightside.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  }, 
+  {
+    id: 9,
+    name: 'GREEN COTTON PRINTED SUIT SET',
+    price: '₹2,999',
+    originalPrice: '₹4,199',
+    discount: '28% OFF',
+    colors: [{ name: 'Green', hex: '#2E8B57' }],
+    images: [
+      '/collection/greencotton.png',
+      '/collection/greencottonfront.png',
+      '/collection/greencottonleft.png',
+      '/collection/greencottonback.png',
+      '/collection/greencottonleftsidegreat.png',
+      '/collection/greencottonrightsidegreat.png',
+    ],
+    sizes: ['30/XS', '32/S', '34/M', '36/L', '38/XL', '40/2XL'],
+  }
 ];
 
-// Card ke andar Auto-sliding Image Component
 function CardImageSlider({ images, alt }: { images: string[]; alt: string }) {
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -192,7 +185,6 @@ function CardImageSlider({ images, alt }: { images: string[]; alt: string }) {
         />
       ))}
 
-      {/* Progress Dots Indicator */}
       {images.length > 1 && (
         <div className="absolute bottom-14 left-1/2 -translate-x-1/2 flex space-x-1.5 z-10">
           {images.map((_, idx) => (
@@ -211,12 +203,28 @@ function CardImageSlider({ images, alt }: { images: string[]; alt: string }) {
 
 export default function MostLoved() {
   const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0] | null>(null);
-  const [wishlist, setWishlist] = useState<number[]>([]);
+  
+  // Using Global Wishlist Context
+  const { wishlist = [], addToWishlist, removeFromWishlist } = useWishlist() as {
+    wishlist?: any[];
+    addToWishlist?: (item: any) => void;
+    removeFromWishlist?: (id: any) => void;
+  };
 
-  const toggleWishlist = (id: number) => {
-    setWishlist((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
+  const toggleWishlist = (product: any) => {
+    const isWishlisted = wishlist.some((item: any) => item.id === product.id);
+    if (isWishlisted) {
+      removeFromWishlist && removeFromWishlist(product.id);
+    } else {
+      addToWishlist && addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        image: product.images?.[0] || '',
+        discount: product.discount,
+      });
+    }
   };
 
   const whatsappNumber = '918385973582';
@@ -237,10 +245,10 @@ export default function MostLoved() {
           </div>
         </div>
 
-        {/* Product Cards Grid: Grid columns adjust kiye hain taaki card bade banein */}
+        {/* Product Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {PRODUCTS.map((product) => {
-            const isWishlisted = wishlist.includes(product.id);
+            const isWishlisted = wishlist.some((item: any) => item.id === product.id);
             const productUrl = `/product?id=${product.id}`;
 
             const whatsappMessage = encodeURIComponent(
@@ -253,7 +261,6 @@ export default function MostLoved() {
                 key={product.id}
                 className="group relative bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
               >
-                {/* Image Container: Height Badha di gayi hai (h-[480px] md:h-[540px]) */}
                 <div className="relative h-[480px] md:h-[540px] w-full bg-gray-50 overflow-hidden">
                   
                   <Link href={productUrl} className="block w-full h-full">
@@ -270,7 +277,7 @@ export default function MostLoved() {
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      toggleWishlist(product.id);
+                      toggleWishlist(product);
                     }}
                     className="absolute top-4 right-4 p-2.5 bg-white/80 backdrop-blur-md rounded-full shadow-md hover:bg-white transition-all z-10"
                   >
