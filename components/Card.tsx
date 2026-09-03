@@ -10,22 +10,22 @@ export default function FestivalSale() {
     {
       id: 'eid',
       image: '/eid.png',
-      link: '/collection/eid',
+      link: '/collection',
     },
     {
       id: 'navratri',
       image: '/navratri.png',
-      link: '/collection/navratri',
+      link: '/collection',
     },
     {
       id: 'rakhi',
       image: '/rakhi.png',
-      link: '/collection/rakhi',
+      link: '/collection',
     },
     {
       id: 'diwali',
       image: '/diwali.png',
-      link: '/collection/diwali',
+      link: '/collection',
     },
   ];
 
@@ -51,7 +51,7 @@ export default function FestivalSale() {
       
       {/* Aspect Ratio Container so Full Image fits perfectly */}
       <div className="max-w-[1400px] mx-auto px-2 sm:px-4">
-        <div className="relative w-full aspect-[16/7] min-h-[300px] max-h-[600px] rounded-2xl overflow-hidden bg-stone-100 shadow-md">
+        <div className="relative w-full aspect-[16/8] sm:aspect-[16/7] min-h-[320px] max-h-[600px] rounded-2xl overflow-hidden bg-stone-100 shadow-md">
           
           {festiveItems.map((item, index) => (
             <div
@@ -69,11 +69,11 @@ export default function FestivalSale() {
                 className="object-contain object-center w-full h-full"
               />
 
-              {/* Positioned Button at Bottom Center (Not hiding text) */}
-              <div className="absolute bottom-6 md:bottom-12 left-1/2 -translate-x-1/2 z-20">
+              {/* Positioned Button adjusted for mobile view to prevent overlap */}
+              <div className="absolute bottom-10 sm:bottom-12 left-1/2 -translate-x-1/2 z-20">
                 <Link
                   href={item.link}
-                  className="inline-flex items-center justify-center px-6 py-2.5 sm:px-8 sm:py-3.5 bg-[#6B1D1D] hover:bg-[#521414] text-white font-medium text-xs sm:text-sm tracking-widest uppercase rounded-full shadow-xl border border-amber-400/30 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center justify-center px-5 py-2 sm:px-8 sm:py-3.5 bg-[#6B1D1D] hover:bg-[#521414] text-white font-medium text-[11px] sm:text-sm tracking-widest uppercase rounded-full shadow-xl border border-amber-400/30 transition-all duration-300 transform hover:scale-105 active:scale-95 whitespace-nowrap"
                 >
                   EXPLORE COLLECTION
                 </Link>
@@ -98,16 +98,16 @@ export default function FestivalSale() {
             <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
 
-          {/* Bottom Dots Indicator */}
-          <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
+          {/* Bottom Dots Indicator placed safely below the button */}
+          <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2">
             {festiveItems.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${
+                className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
                   currentIndex === index
-                    ? 'w-6 bg-[#6B1D1D]'
-                    : 'w-2 bg-stone-300 hover:bg-stone-400'
+                    ? 'w-5 sm:w-6 bg-[#6B1D1D]'
+                    : 'w-1.5 sm:w-2 bg-stone-300 hover:bg-stone-400'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
               />

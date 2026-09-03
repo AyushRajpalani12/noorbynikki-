@@ -67,7 +67,7 @@ export default function HeroBanner() {
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
-                  href="/#collection"
+                  href="/collection"
                   className="bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-amber-400/30 transition-all duration-300 text-xs uppercase tracking-wider flex items-center gap-2 group"
                 >
                   Shop Collection
