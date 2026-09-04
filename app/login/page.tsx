@@ -29,11 +29,14 @@ export default function LoginPage() {
     if (userData.email === email && userData.password === password) {
       localStorage.setItem('currentUser', JSON.stringify(userData));
       
+      // Trigger instant navbar update
+      window.dispatchEvent(new Event('authChange'));
+      
       // Green Toast Notification for Successful Login
       setToastMessage('Your login is successfully done!');
 
       setTimeout(() => {
-        router.push('/account');
+        router.push('/dashboard'); // <-- Yahan '/account' ki jagah '/dashboard' kar diya hai
       }, 1500);
     } else {
       setErrorMsg('Invalid Email or Password!');

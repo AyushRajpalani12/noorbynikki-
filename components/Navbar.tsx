@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, User, Menu, X, ChevronRight, ArrowLeft, Trash2, Heart } from "lucide-react";
+import { ShoppingBag, User, Menu, X, ChevronRight, ArrowLeft, Trash2, Heart, ShieldAlert } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { useWishlist } from "@/context/WishlistContext";
 
@@ -99,7 +99,7 @@ export default function Navbar() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex space-x-8 font-medium text-sm tracking-wide">
+          <nav className="hidden md:flex items-center space-x-6 font-medium text-sm tracking-wide">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -117,6 +117,19 @@ export default function Navbar() {
                 </Link>
               );
             })}
+
+            {/* --- ADMIN / DASHBOARD LINK (Desktop) --- */}
+            <Link
+              href="/dashboard"
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
+                pathname === "/dashboard"
+                  ? "bg-rose-600 text-white border-rose-600 font-semibold shadow-sm"
+                  : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200"
+              }`}
+            >
+              <ShieldAlert className="w-4 h-4" />
+              <span>Admin</span>
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-4 text-gray-700">
@@ -310,6 +323,23 @@ export default function Navbar() {
                     </Link>
                   );
                 })}
+
+                {/* --- ADMIN / DASHBOARD LINK (Mobile) --- */}
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl font-medium text-sm transition-all mt-2 border ${
+                    pathname === "/dashboard"
+                      ? "bg-rose-600 text-white border-rose-600 font-semibold"
+                      : "bg-gray-50 text-gray-800 border-gray-200 hover:bg-rose-50 hover:text-rose-600"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <ShieldAlert className="w-4 h-4" />
+                    <span>Admin Dashboard</span>
+                  </div>
+                  <ChevronRight className="w-4 h-4" />
+                </Link>
               </nav>
             </div>
             <div className="p-4 border-t border-gray-100 bg-gray-50">

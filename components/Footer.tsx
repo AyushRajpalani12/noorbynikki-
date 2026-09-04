@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import {
   MapPin,
   Phone,
@@ -27,46 +26,36 @@ export default function Footer() {
   const serviceLinks = [
     {
       name: "Privacy Policy",
-      href: "/privacy-policy",
     },
     {
       name: "Terms & Condition",
-      href: "/terms",
     },
     {
       name: "Cancellation, Shipping & Return Policy",
-      href: "/cancellation-returns",
     },
   ];
 
   const informationLinks = [
     {
       name: "About Us",
-      href: "/about",
     },
     {
       name: "FAQ",
-      href: "/faq",
     },
     {
       name: "Why Choose Us",
-      href: "/why-us",
     },
     {
       name: "Our Certificate",
-      href: "/certificate",
     },
     {
       name: "How To Order",
-      href: "/how-to-order",
     },
     {
       name: "Logistics Partner",
-      href: "/logistics",
     },
     {
       name: "Contact Us",
-      href: "/contact",
     },
   ];
 
@@ -194,20 +183,14 @@ export default function Footer() {
             <ul className="space-y-3.5 sm:space-y-4">
               {serviceLinks.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
+                  <div
                     className="
-                      group
                       flex
                       items-start
                       gap-2.5
                       text-[13px] sm:text-[14px]
                       leading-6
                       text-[#4f4a44]
-                      transition-all
-                      duration-300
-                      hover:translate-x-1
-                      hover:text-[#a7193b]
                     "
                   >
                     <ChevronRight
@@ -217,13 +200,10 @@ export default function Footer() {
                         mt-1
                         shrink-0
                         text-[#a87928]
-                        transition-transform
-                        duration-300
-                        group-hover:translate-x-1
                       "
                     />
                     <span>{item.name}</span>
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -252,19 +232,13 @@ export default function Footer() {
             <ul className="space-y-3 sm:space-y-3.5">
               {informationLinks.map((item) => (
                 <li key={item.name}>
-                  <Link
-                    href={item.href}
+                  <div
                     className="
-                      group
                       flex
                       items-center
                       gap-2.5
                       text-[13px] sm:text-[14px]
                       text-[#4f4a44]
-                      transition-all
-                      duration-300
-                      hover:translate-x-1
-                      hover:text-[#a7193b]
                     "
                   >
                     <ChevronRight
@@ -273,13 +247,10 @@ export default function Footer() {
                       className="
                         shrink-0
                         text-[#a87928]
-                        transition-transform
-                        duration-300
-                        group-hover:translate-x-1
                       "
                     />
                     <span>{item.name}</span>
-                  </Link>
+                  </div>
                 </li>
               ))}
             </ul>

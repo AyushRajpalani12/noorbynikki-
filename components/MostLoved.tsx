@@ -203,28 +203,17 @@ function CardImageSlider({ images, alt }: { images: string[]; alt: string }) {
 
 export default function MostLoved() {
   const [selectedProduct, setSelectedProduct] = useState<typeof PRODUCTS[0] | null>(null);
-  
-  // Using Global Wishlist Context
-  const { wishlist = [], addToWishlist, removeFromWishlist } = useWishlist() as {
-    wishlist?: any[];
-    addToWishlist?: (item: any) => void;
-    removeFromWishlist?: (id: any) => void;
-  };
+    const { isWishlisted: checkWishlisted, toggleWishlist: toggleWishlistItem } = useWishlist();
 
   const toggleWishlist = (product: any) => {
-    const isWishlisted = wishlist.some((item: any) => item.id === product.id);
-    if (isWishlisted) {
-      removeFromWishlist && removeFromWishlist(product.id);
-    } else {
-      addToWishlist && addToWishlist({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.images?.[0] || '',
-        discount: product.discount,
-      });
-    }
+    toggleWishlistItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: product.images?.[0] || '',
+  
+    });
   };
 
   const whatsappNumber = '918385973582';
@@ -248,7 +237,7 @@ export default function MostLoved() {
         {/* Product Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {PRODUCTS.map((product) => {
-            const isWishlisted = wishlist.some((item: any) => item.id === product.id);
+                    const isWishlisted = checkWishlisted(product.id);
             const productUrl = `/product?id=${product.id}`;
 
             const whatsappMessage = encodeURIComponent(
