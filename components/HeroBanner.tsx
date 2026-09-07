@@ -12,7 +12,7 @@ export default function HeroBanner() {
   );
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
 
-  // Rotating showcase images — apni collection ki 4 images
+  // Rotating showcase images
   const showcaseImages = [
     { src: '/collection/greencottonrightsidegreat.png', alt: 'Green Cotton Suit Set' },
     { src: '/collection/offwhitestright.png', alt: 'Off White Straight Suit Set' },
@@ -39,46 +39,46 @@ export default function HeroBanner() {
           {/* Background Decorative Pattern / Glow */}
           <div className="absolute -top-24 -left-24 w-96 h-96 bg-rose-500/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-amber-500/15 rounded-full blur-3xl pointer-events-none" />
-          {/* Subtle gold hairline for a premium edge */}
           <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-300/40 to-transparent" />
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center min-h-[480px] md:min-h-[520px]">
+          {/* Mobile: Image on top, Content on bottom. Desktop (lg): Grid side-by-side */}
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 items-center min-h-[480px] md:min-h-[520px]">
 
-            {/* Left Column: Premium Content */}
-            <div className="lg:col-span-7 p-6 sm:p-10 md:p-12 z-10 flex flex-col justify-center space-y-5 md:space-y-6">
+            {/* Left Column: Premium Content - Reduced mobile padding to p-5 for proper button fitting */}
+            <div className="lg:col-span-7 p-5 sm:p-10 md:p-12 z-10 flex flex-col justify-center space-y-4 md:space-y-6 w-full">
 
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase border border-white/15 w-fit text-rose-200">
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold tracking-widest uppercase border border-white/15 w-fit text-rose-200">
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 Festive Edition 2026
               </div>
 
               {/* Main Headline */}
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight uppercase tracking-wide">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight uppercase tracking-wide">
                 Graceful <span className="text-amber-300 italic font-normal">Elegance</span> <br />
                 For Every Occasion
               </h1>
 
               {/* Subheading */}
-              <p className="text-sm sm:text-base text-rose-100/90 font-light max-w-xl leading-relaxed">
+              <p className="text-xs sm:text-base text-rose-100/90 font-light max-w-xl leading-relaxed">
                 Explore our handpicked collection of handcrafted Anarkalis, Rayon Suit Sets, and Pure Cotton Silhouettes designed for timeless beauty and comfort.
               </p>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              {/* Action Buttons - Optimized padding and text size so they never cut on mobile */}
+              <div className="flex flex-row items-center gap-2 pt-1 w-full">
                 <Link
                   href="/collection"
-                  className="bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold px-7 py-3.5 rounded-xl shadow-lg hover:shadow-amber-400/30 transition-all duration-300 text-xs uppercase tracking-wider flex items-center gap-2 group"
+                  className="flex-1 text-center bg-amber-400 hover:bg-amber-300 text-gray-900 font-bold px-2.5 sm:px-6 py-3 rounded-xl shadow-lg hover:shadow-amber-400/30 transition-all duration-300 text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1 group whitespace-nowrap"
                 >
-                  Shop Collection
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <span>Shop Collection</span>
+                  <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform shrink-0" />
                 </Link>
 
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-6 py-3.5 rounded-xl border border-white/20 transition-all duration-300 text-xs uppercase tracking-wider"
+                  className="flex-1 text-center bg-white/10 hover:bg-white/20 backdrop-blur-md text-white font-bold px-2.5 sm:px-6 py-3 rounded-xl border border-white/20 transition-all duration-300 text-[10px] sm:text-xs uppercase tracking-wider whitespace-nowrap"
                 >
                   Inquire on WhatsApp
                 </a>
@@ -87,7 +87,7 @@ export default function HeroBanner() {
             </div>
 
             {/* Right Column: Rotating Hero Image Showcase */}
-            <div className="lg:col-span-5 relative h-72 sm:h-96 lg:h-full min-h-[350px] lg:min-h-[520px] overflow-hidden">
+            <div className="lg:col-span-5 relative w-full h-72 sm:h-96 lg:h-full min-h-[350px] lg:min-h-[520px] overflow-hidden">
               {showcaseImages.map((img, index) => (
                 <Image
                   key={img.src}
@@ -95,15 +95,14 @@ export default function HeroBanner() {
                   alt={img.alt}
                   fill
                   priority={index === 0}
-                  className={`object-cover object-top lg:rounded-r-3xl transition-opacity duration-1000 ease-in-out ${
+                  className={`object-cover object-top transition-opacity duration-1000 ease-in-out ${
                     index === activeIndex ? 'opacity-100' : 'opacity-0'
                   }`}
                 />
               ))}
 
-              {/* Soft Gradient Overlay for Smooth Edge Blend on Mobile */}
+              {/* Soft Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-t from-rose-950 via-transparent to-transparent lg:hidden" />
-              {/* Subtle side blend into the panel on desktop for a seamless premium look */}
               <div className="hidden lg:block absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-rose-900/70 to-transparent" />
 
               {/* Slide Indicators */}

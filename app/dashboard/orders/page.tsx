@@ -23,9 +23,11 @@ export default function DashboardOrdersPage() {
 
       <main className="flex-1 lg:ml-64 bg-[#FAF6F0] flex flex-col">
 
-        {/* Top bar */}
-        <div className="fixed top-0 left-0 right-0 lg:left-64 z-30 h-16 flex items-center justify-between bg-[#FAF6F0]/95 backdrop-blur border-b border-[#EFE6DA] px-4 sm:px-6">
-          <p className="font-serif text-[15px] text-[#2A211D]">My Orders</p>
+        {/* Top bar - Increased mobile left padding to pl-16 to completely avoid overlapping with the hamburger menu */}
+        <div className="fixed top-0 left-0 right-0 lg:left-64 z-30 h-16 flex items-center justify-between bg-[#FAF6F0]/95 backdrop-blur border-b border-[#EFE6DA] pl-16 pr-4 sm:px-6">
+          <p className="font-serif text-sm sm:text-[15px] text-[#2A211D] font-medium tracking-wide truncate">
+            My Orders
+          </p>
         </div>
 
         <div className="flex-1 pt-16 px-4 pb-4 sm:px-6 sm:pb-6 flex flex-col gap-5">
