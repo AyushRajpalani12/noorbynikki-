@@ -21,9 +21,9 @@ export default function VideoShowcase() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Main Section Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-stretch bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100/80">
+        <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 items-stretch bg-white rounded-3xl overflow-hidden shadow-xl border border-gray-100/80">
           
-          {/* LEFT SIDE: Content & Fabric Thumbnails */}
+          {/* LEFT SIDE (Desktop) / BOTTOM (Mobile): Content & Fabric Thumbnails */}
           <div className="lg:col-span-6 p-8 sm:p-12 lg:p-16 flex flex-col justify-center text-left relative z-10">
             
             {/* Tag */}
@@ -75,30 +75,30 @@ export default function VideoShowcase() {
               </div>
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-4">
+            {/* Action Buttons - Fixed alignment for mobile & desktop */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
               <Link
                 href="/collection"
-                className="inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-all text-xs uppercase tracking-wider"
+                className="inline-flex items-center justify-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 px-8 rounded-xl shadow-md transition-all text-xs uppercase tracking-wider text-center"
               >
                 Explore Collection
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 shrink-0" />
               </Link>
               <a
                 href="https://wa.me/918385973582?text=Hello,%20I%20want%20to%20enquire%20about%20your%20ethnic%20collection."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition-all text-xs uppercase tracking-wider"
+                className="inline-flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-xl shadow-md transition-all text-xs uppercase tracking-wider text-center"
               >
-                <MessageCircle className="w-4 h-4 fill-white text-emerald-600" />
+                <MessageCircle className="w-4 h-4 fill-white text-emerald-600 shrink-0" />
                 Order on WhatsApp
               </a>
             </div>
 
           </div>
 
-          {/* RIGHT SIDE: Auto-playing Video Showcase */}
-          <div className="lg:col-span-6 relative w-full h-[450px] sm:h-[550px] lg:h-auto min-h-[600px] bg-gray-900 overflow-hidden">
+          {/* RIGHT SIDE (Desktop) / TOP (Mobile): Auto-playing Video Showcase */}
+          <div className="lg:col-span-6 relative w-full h-[380px] sm:h-[480px] lg:h-auto min-h-[400px] lg:min-h-[600px] bg-gray-900 overflow-hidden">
             <video
               ref={videoRef}
               autoPlay

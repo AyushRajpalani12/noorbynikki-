@@ -116,7 +116,7 @@ export default function Looking() {
                   </p>
 
                   <Link
-                    href="/#collection"
+                    href="/collection"
                     className="mt-7 inline-flex items-center gap-3 rounded-full bg-[#f2c978] px-6 py-3.5 text-[10px] font-bold uppercase tracking-[0.18em] text-[#421225] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#f8d999]"
                   >
                     Explore Collection
@@ -134,13 +134,15 @@ export default function Looking() {
             {/* image card */}
 
             <div className="group relative flex-1 overflow-hidden rounded-[30px] bg-[#ece0d8] shadow-[0_25px_60px_rgba(78,21,42,0.12)]">
-              <div className="relative min-h-[420px] lg:min-h-[480px]">
+              {/* Yahan min-h ko thoda increase kiya hai taaki desktop par image proper space le */}
+              <div className="relative min-h-[460px] sm:min-h-[500px] lg:min-h-[540px]">
                 <Image
                   src="/hiran.png"
                   alt="Elegant festive ethnic fashion"
                   fill
                   sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-center transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
+                  // 'object-center' ki jagah 'object-top' ya 'object-[center_top]' use karne se model ka face/upper body cut nahi hota
+                  className="object-cover object-top transition-transform duration-1000 ease-out group-hover:scale-[1.04]"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-[#32101c]/75 via-transparent to-transparent" />

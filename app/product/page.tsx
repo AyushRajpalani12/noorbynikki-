@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { Heart, ShieldCheck, Truck, RotateCcw, ChevronDown, ChevronUp, MessageCircle } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import ImageZoom from '@/components/ImageZoom';
+import { useWishlist } from '@/context/WishlistContext';
 
 // Centralized Products List
 const PRODUCTS_DATA = [
@@ -322,8 +323,8 @@ function ProductContent() {
   const [selectedImage, setSelectedImage] = useState(product?.images?.[0] || '');
   const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || null);
   const [selectedSize, setSelectedSize] = useState(product?.sizes?.[0] || '');
-
-  const [isWishlisted, setIsWishlisted] = useState(false);
+const { isWishlisted: checkWishlisted, toggleWishlist: toggleWishlistItem } = useWishlist();
+const isWishlisted = checkWishlisted(product.id);
   const [pincode, setPincode] = useState('');
   const [deliveryDate, setDeliveryDate] = useState<string | null>(null);
   const [pincodeError, setPincodeError] = useState('');
@@ -365,11 +366,17 @@ function ProductContent() {
     }
   };
 
-  const handleAddToCart = () => {
-    addToCart();
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-  };
+const handleAddToCart = () => {
+  addToCart({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.images?.[0] || '',
+    size: selectedSize,
+  });
+  setShowToast(true);
+  setTimeout(() => setShowToast(false), 3000);
+};
 
   const whatsappNumber = '918385973582';
   const whatsappMessage = encodeURIComponent(
@@ -440,12 +447,20 @@ function ProductContent() {
                 {selectedImage && (
                   <ImageZoom src={selectedImage} alt={product.name} images={product.images} />
                 )}
-                <button
-                  onClick={() => setIsWishlisted(!isWishlisted)}
-                  className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all z-30"
-                >
-                  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-gray-600'}`} />
-                </button>
+            <button
+  onClick={() =>
+    toggleWishlistItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: product.images?.[0] || '',
+    })
+  }
+  className="absolute top-4 right-4 p-2.5 bg-white/90 hover:bg-white rounded-full shadow-md transition-all z-30"
+>
+  <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-600 text-rose-600' : 'text-gray-600'}`} />
+</button>
               </div>
             </div>
           </div>

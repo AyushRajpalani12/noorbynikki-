@@ -9,7 +9,7 @@ export default function CollectionSection() {
   const collectionSuits = [
     {
       name: 'Royal Blue Suite',
-      image: '/bluew.png',
+      image: '/mynewlook.png',
       tag: 'Exclusive',
       rotate: '-1.5deg',
       position: 'center center',

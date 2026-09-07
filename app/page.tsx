@@ -6,13 +6,14 @@ import MostLoved from "@/components/MostLoved";
 import FestivalSale from '@/components/FestivalSale';
 import Card from '@/components/Card';
 import Looking from '@/components/Looking';
+import Playvideo from '@/components/Playvideo';
 export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* Navbar yahan se hata diya hai kyunki layout.tsx me already maujood hai */}
       <HeroSlider />
       <ExploreCollections />
-   
+   <Playvideo/>
       <FestivalSale />
       <Card/>
       <MostLoved />
