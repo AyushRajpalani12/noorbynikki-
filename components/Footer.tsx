@@ -182,7 +182,7 @@ export default function Footer() {
 
             <ul className="space-y-3.5 sm:space-y-4">
               {serviceLinks.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="cursor-pointer group">
                   <div
                     className="
                       flex
@@ -191,6 +191,9 @@ export default function Footer() {
                       text-[13px] sm:text-[14px]
                       leading-6
                       text-[#4f4a44]
+                      transition-colors
+                      duration-300
+                      group-hover:text-[#a7193b]
                     "
                   >
                     <ChevronRight
@@ -200,9 +203,13 @@ export default function Footer() {
                         mt-1
                         shrink-0
                         text-[#a87928]
+                        transition-transform
+                        duration-300
+                        group-hover:translate-x-1
+                        group-hover:text-[#a7193b]
                       "
                     />
-                    <span>{item.name}</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">{item.name}</span>
                   </div>
                 </li>
               ))}
@@ -231,7 +238,7 @@ export default function Footer() {
 
             <ul className="space-y-3 sm:space-y-3.5">
               {informationLinks.map((item) => (
-                <li key={item.name}>
+                <li key={item.name} className="cursor-pointer group">
                   <div
                     className="
                       flex
@@ -239,6 +246,9 @@ export default function Footer() {
                       gap-2.5
                       text-[13px] sm:text-[14px]
                       text-[#4f4a44]
+                      transition-colors
+                      duration-300
+                      group-hover:text-[#a7193b]
                     "
                   >
                     <ChevronRight
@@ -247,9 +257,13 @@ export default function Footer() {
                       className="
                         shrink-0
                         text-[#a87928]
+                        transition-transform
+                        duration-300
+                        group-hover:translate-x-1
+                        group-hover:text-[#a7193b]
                       "
                     />
-                    <span>{item.name}</span>
+                    <span className="transition-transform duration-300 group-hover:translate-x-0.5">{item.name}</span>
                   </div>
                 </li>
               ))}
