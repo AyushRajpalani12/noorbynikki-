@@ -10,37 +10,32 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg(null);
     
-    const savedUser = localStorage.getItem('registeredUser');
+    // User jo bhi email daalega, uske basis par ek naam generate kar lenge (jaise email ka pehla part)
+    const nameFromEmail = email.split('@')[0] || 'User';
+    const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
 
-    if (!savedUser) {
-      setErrorMsg('No account found! Please register first.');
-      setTimeout(() => router.push('/register'), 1500);
-      return;
-    }
+    const userData = {
+      name: formattedName,
+      email: email,
+      password: password
+    };
 
-    const userData = JSON.parse(savedUser);
+    // Direct current user me save kar denge taaki koi error na aaye
+    localStorage.setItem('currentUser', JSON.stringify(userData));
+    
+    // Trigger instant navbar update
+    window.dispatchEvent(new Event('authChange'));
+    
+    // Green Toast Notification for Successful Login
+    setToastMessage('Your login is successfully done!');
 
-    if (userData.email === email && userData.password === password) {
-      localStorage.setItem('currentUser', JSON.stringify(userData));
-      
-      // Trigger instant navbar update
-      window.dispatchEvent(new Event('authChange'));
-      
-      // Green Toast Notification for Successful Login
-      setToastMessage('Your login is successfully done!');
-
-      setTimeout(() => {
-        router.push('/dashboard'); // <-- Yahan '/account' ki jagah '/dashboard' kar diya hai
-      }, 1500);
-    } else {
-      setErrorMsg('Invalid Email or Password!');
-    }
+    setTimeout(() => {
+      router.push('/dashboard'); 
+    }, 1500);
   };
 
   return (
@@ -63,12 +58,6 @@ export default function LoginPage() {
           <h2 className="mt-4 text-2xl font-serif font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-1 text-xs text-gray-500">Please enter your details to sign in</p>
         </div>
-
-        {errorMsg && (
-          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-xs text-center font-medium">
-            {errorMsg}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

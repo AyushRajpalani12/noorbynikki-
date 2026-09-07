@@ -32,11 +32,13 @@ export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
 
-  // User state
+  // User state & hydration fix
   const [parsedUser, setParsedUser] = useState<{ name?: string } | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Function to check user from localStorage
+  // Function to check user from localStorage safely
   const checkUser = () => {
+    if (typeof window === "undefined") return;
     const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
       try {
@@ -50,12 +52,10 @@ export default function Navbar() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     checkUser();
 
-    // Custom storage listener taaki logout/login par turant navbar update ho jaye
     window.addEventListener('storage', checkUser);
-    
-    // Custom event listener for instant state change across components
     window.addEventListener('authChange', checkUser);
 
     return () => {
@@ -82,7 +82,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
+      <header className="fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
 
           <div className="flex items-center gap-3">
@@ -142,7 +142,7 @@ export default function Navbar() {
               suppressHydrationWarning
             >
               <User className="w-5 h-5" />
-              {parsedUser && parsedUser.name && (
+              {isMounted && parsedUser && parsedUser.name && (
                 <span className="hidden lg:inline max-w-[90px] truncate font-semibold text-gray-800">
                   {parsedUser.name.split(' ')[0]}
                 </span>
@@ -182,6 +182,9 @@ export default function Navbar() {
 
         </div>
       </header>
+
+      {/* Spacer taaki fixed navbar content ke upar na aaye */}
+      <div className="h-16" />
 
       {/* CART SLIDE-OVER DRAWER */}
       {isCartOpen && (
