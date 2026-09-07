@@ -7,7 +7,7 @@ import {
   Mail,
   ChevronRight,
 } from "lucide-react";
-
+// sugfaguuafoitgofdiu
 export default function Footer() {
   const [year, setYear] = useState<number | string>("");
 
