@@ -14,39 +14,46 @@ export default function RegisterPage() {
   });
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // 1. Purane sabhi registered users ki list nikalna (agar hai toh)
-    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    // 2. Check karna ki email already registered toh nahi hai
-    const userExists = existingUsers.some((u: any) => u.email === formData.email);
-    if (userExists) {
-      alert('This email is already registered! Please login instead.');
-      router.push('/login');
+  try {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify(formData),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert(data.message);
       return;
     }
 
-    // 3. Naye user ko list me add karna
-    const updatedUsers = [...existingUsers, formData];
-    localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-    
-    // 4. Current user ko bhi set kar dena taaki sign up hote hi login ho jaye
-    localStorage.setItem('currentUser', JSON.stringify(formData));
-    
-    // 5. Navbar/App ko update karne ke liye custom event fire karna
-    window.dispatchEvent(new Event('authChange'));
+    setToastMessage("Your registration is successfully done!");
 
-    // 6. Green Toast Notification show karna
-    setToastMessage('Your registration is successfully done!');
-    
-    // 7. 1.5 second ke baad home ya account page par redirect karna
+    // Save only safe user information
+    localStorage.setItem(
+      "currentUser",
+      JSON.stringify(data.user)
+    );
+
+    window.dispatchEvent(new Event("authChange"));
+
     setTimeout(() => {
-      router.push('/account'); // ya '/' jahan aap bhejna chahe
+      router.push("/account");
     }, 1500);
-  };
+  } catch (error) {
+    console.error("Registration error:", error);
 
+    alert("Unable to connect to server. Please try again.");
+  }
+};
   return (
     <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative">
       
