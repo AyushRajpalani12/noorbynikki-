@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, User, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import API from '@/lib/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -11,42 +12,71 @@ export default function RegisterPage() {
     name: '',
     email: '',
     password: '',
+    confirmPassword: '',
+    
   });
+const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+ const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // 1. Purane sabhi registered users ki list nikalna (agar hai toh)
-    const existingUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    setErrorMessage(null);
 
-    // 2. Check karna ki email already registered toh nahi hai
-    const userExists = existingUsers.some((u: any) => u.email === formData.email);
-    if (userExists) {
-      alert('This email is already registered! Please login instead.');
-      router.push('/login');
+    // 1. Password Match Validation
+    if (formData.password !== formData.confirmPassword) {
+      setErrorMessage('Passwords do not match. Please verify and try again.');
       return;
     }
 
-    // 3. Naye user ko list me add karna
-    const updatedUsers = [...existingUsers, formData];
-    localStorage.setItem('registeredUsers', JSON.stringify(updatedUsers));
-    
-    // 4. Current user ko bhi set kar dena taaki sign up hote hi login ho jaye
-    localStorage.setItem('currentUser', JSON.stringify(formData));
-    
-    // 5. Navbar/App ko update karne ke liye custom event fire karna
-    window.dispatchEvent(new Event('authChange'));
+    if (formData.password.length < 6) {
+      setErrorMessage('Password must be at least 6 characters long.');
+      return;
+    }
 
-    // 6. Green Toast Notification show karna
-    setToastMessage('Your registration is successfully done!');
-    
-    // 7. 1.5 second ke baad home ya account page par redirect karna
-    setTimeout(() => {
-      router.push('/account'); // ya '/' jahan aap bhejna chahe
-    }, 1500);
+    setLoading(true);
+
+    try {
+      // 2. Backend payload (confirmPassword backend nahi bhejna hota)
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword : formData.confirmPassword,
+      };
+
+      const response = await API.post('/auth/signup', payload);
+
+      const resData = response.data?.data || response.data;
+      const token = resData?.token || response.data?.token;
+      const user = resData?.user || response.data?.user;
+
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      }
+
+      window.dispatchEvent(new Event('authChange'));
+      setToastMessage('Your registration is successfully done!');
+
+      setTimeout(() => {
+        if (token) {
+          router.push('/dashboard');
+        } else {
+          router.push('/login');
+        }
+      }, 1200);
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.message ||
+        'Registration failed. Please check your details and try again.';
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative">
       
@@ -67,10 +97,19 @@ export default function RegisterPage() {
           <h2 className="mt-4 text-2xl font-serif font-bold text-gray-900">Create Account</h2>
           <p className="mt-1 text-xs text-gray-500">Join us for exclusive collection & updates</p>
         </div>
+  
+        {errorMessage && (
+          <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+ <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Full Name</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Full Name
+            </label>
             <div className="relative">
               <User className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
               <input
@@ -85,7 +124,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Email Address
+            </label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
               <input
@@ -100,7 +141,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Password</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
               <input
@@ -114,12 +157,41 @@ export default function RegisterPage() {
             </div>
           </div>
 
+          {/* Confirm Password Field */}
+          <div>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Confirm Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
+              <input
+                type="password"
+                required
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                placeholder="••••••••"
+                className="w-full pl-11 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-rose-600 text-gray-900"
+              />
+            </div>
+          </div>
+
           <button
             type="submit"
-            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+            disabled={loading}
+            style={{ backgroundColor: '#e11d48', color: '#ffffff' }}
+            className="w-full font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider shadow-lg hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 mt-2"
           >
-            <span>Sign Up</span>
-            <ArrowRight className="w-4 h-4" />
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
+                <span className="text-white font-semibold">Creating Account...</span>
+              </>
+            ) : (
+              <>
+                <span className="text-white font-semibold">Sign Up</span>
+                <ArrowRight className="w-4 h-4 text-white" />
+              </>
+            )}
           </button>
         </form>
 

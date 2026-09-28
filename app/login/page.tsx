@@ -3,41 +3,58 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Mail, Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import API from '@/lib/api';
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false); // API call ongoing status track karne ke liye
+const [errorMessage, setErrorMessage] = useState<string | null>(null);
+const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // User jo bhi email daalega, uske basis par ek naam generate kar lenge (jaise email ka pehla part)
-    const nameFromEmail = email.split('@')[0] || 'User';
-    const formattedName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+    setErrorMessage(null);
+    setLoading(true);
 
-    const userData = {
-      name: formattedName,
-      email: email,
-      password: password
-    };
+    try {
+      const response = await API.post('/auth/login', {
+        email,
+        password,
+      });
 
-    // Direct current user me save kar denge taaki koi error na aaye
-    localStorage.setItem('currentUser', JSON.stringify(userData));
-    
-    // Trigger instant navbar update
-    window.dispatchEvent(new Event('authChange'));
-    
-    // Green Toast Notification for Successful Login
-    setToastMessage('Your login is successfully done!');
+      // Backend response se data nikalna (handling direct data ya response.data)
+      const resData = response.data?.data || response.data;
+      const token = resData?.token || response.data?.token;
+      const user = resData?.user || response.data?.user;
 
-    setTimeout(() => {
-      router.push('/dashboard'); 
-    }, 1500);
+      if (token) {
+        localStorage.setItem('token', token);
+      }
+      if (user) {
+        localStorage.setItem('currentUser', JSON.stringify(user));
+      }
+
+      // Navbar update trigger
+      window.dispatchEvent(new Event('authChange'));
+
+      // Green Toast Notification
+      setToastMessage('Your login is successfully done!');
+
+      // Instant Dashboard Redirect
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 1000);
+    } catch (err: any) {
+      const msg =
+        err.response?.data?.message ||
+        'Invalid email or password. Please try again.';
+      setErrorMessage(msg);
+    } finally {
+      setLoading(false);
+    }
   };
-
   return (
     <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative">
       
@@ -58,7 +75,13 @@ export default function LoginPage() {
           <h2 className="mt-4 text-2xl font-serif font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-1 text-xs text-gray-500">Please enter your details to sign in</p>
         </div>
-
+  {/* --- ERROR MESSAGE BANNER --- */}
+  {errorMessage && (
+  <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
+    <AlertCircle className="w-4 h-4 shrink-0" />
+    <span>{errorMessage}</span>
+  </div>
+)}
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
@@ -90,12 +113,23 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <button
+         <button
             type="submit"
-            className="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer"
+            disabled={loading}
+            style={{ backgroundColor: '#e11d48', color: '#ffffff' }}
+            className="w-full font-bold py-3.5 px-8 rounded-xl text-xs uppercase tracking-wider shadow-lg hover:opacity-95 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60"
           >
-            <span>Sign In</span>
-            <ArrowRight className="w-4 h-4" />
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
+                <span className="text-white font-semibold">Signing In...</span>
+              </>
+            ) : (
+              <>
+                <span className="text-white font-semibold">Sign In</span>
+                <ArrowRight className="w-4 h-4 text-white" />
+              </>
+            )}
           </button>
         </form>
 

@@ -1,10 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { MapPin, Plus, Trash2, CheckCircle2, Home, Briefcase } from 'lucide-react';
 import DashboardSidebar from '@/app/dashboardsidebar/page';
+import { MapPin, Plus, Trash2, CheckCircle2, Home, Briefcase, Loader2, AlertCircle } from 'lucide-react';
+import API from '@/lib/api'; //
 
 interface Address {
+  _id?: string;
   id: string;
   type: 'Home' | 'Work' | 'Other';
   name: string;
