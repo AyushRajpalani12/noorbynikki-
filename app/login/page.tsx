@@ -11,9 +11,10 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false); // API call ongoing status track karne ke liye
-const [errorMessage, setErrorMessage] = useState<string | null>(null);
-const handleSubmit = async (e: React.FormEvent) => {
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
     setLoading(true);
@@ -24,7 +25,6 @@ const handleSubmit = async (e: React.FormEvent) => {
         password,
       });
 
-      // Backend response se data nikalna (handling direct data ya response.data)
       const resData = response.data?.data || response.data;
       const token = resData?.token || response.data?.token;
       const user = resData?.user || response.data?.user;
@@ -36,13 +36,13 @@ const handleSubmit = async (e: React.FormEvent) => {
         localStorage.setItem('currentUser', JSON.stringify(user));
       }
 
-      // Navbar update trigger
+      // Trigger navbar update
       window.dispatchEvent(new Event('authChange'));
 
-      // Green Toast Notification
+      // Success notification
       setToastMessage('Your login is successfully done!');
 
-      // Instant Dashboard Redirect
+      // Redirect to dashboard
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);
@@ -55,10 +55,10 @@ const handleSubmit = async (e: React.FormEvent) => {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative">
-      
-      {/* --- GREEN TOAST SUCCESS NOTIFICATION --- */}
+      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-6 z-50 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
           <CheckCircle2 className="w-5 h-5" />
@@ -67,7 +67,6 @@ const handleSubmit = async (e: React.FormEvent) => {
       )}
 
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-10 space-y-8">
-        
         <div className="text-center">
           <Link href="/" className="text-2xl font-bold tracking-wider text-rose-600 font-serif">
             KURTI<span className="text-gray-800">STORE</span>
@@ -75,16 +74,20 @@ const handleSubmit = async (e: React.FormEvent) => {
           <h2 className="mt-4 text-2xl font-serif font-bold text-gray-900">Welcome Back</h2>
           <p className="mt-1 text-xs text-gray-500">Please enter your details to sign in</p>
         </div>
-  {/* --- ERROR MESSAGE BANNER --- */}
-  {errorMessage && (
-  <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
-    <AlertCircle className="w-4 h-4 shrink-0" />
-    <span>{errorMessage}</span>
-  </div>
-)}
+
+        {/* Error Alert Banner */}
+        {errorMessage && (
+          <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Email Address</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Email Address
+            </label>
             <div className="relative">
               <Mail className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
               <input
@@ -99,7 +102,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">Password</label>
+            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
+              Password
+            </label>
             <div className="relative">
               <Lock className="absolute left-3.5 top-3.5 w-5 h-5 text-gray-400" />
               <input
@@ -113,7 +118,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
           </div>
 
-         <button
+          <button
             type="submit"
             disabled={loading}
             style={{ backgroundColor: '#e11d48', color: '#ffffff' }}
@@ -134,12 +139,11 @@ const handleSubmit = async (e: React.FormEvent) => {
         </form>
 
         <div className="text-center text-xs text-gray-500">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/register" className="text-rose-600 font-semibold hover:underline">
             Create account
           </Link>
         </div>
-{/* uigfudsagfuoyg */}
       </div>
     </div>
   );

@@ -3,40 +3,105 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ShoppingBag, User, Menu, X, ChevronRight, ArrowLeft, Trash2, Heart, ShieldAlert } from "lucide-react";
-import { useCart } from "@/context/CartContext";
+import { ShoppingBag, User, Menu, X, ChevronRight, ArrowLeft, Trash2, Heart, ShieldAlert, Loader2 } from "lucide-react";
 import { useWishlist } from "@/context/WishlistContext";
+import api from "@/lib/api";
 
 export default function Navbar() {
-  const {
-    cartCount = 0,
-    cartItems = [],
-    removeFromCart,
-    updateQuantity,
-    isCartOpen,
-    openCart,
-    closeCart,
-  } = useCart() as {
-    cartCount?: number;
-    cartItems?: any[];
-    removeFromCart?: (id: any) => void;
-    updateQuantity?: (id: any, qty: number) => void;
-    isCartOpen?: boolean;
-    openCart?: () => void;
-    closeCart?: () => void;
-  };
-
   const { wishlistCount = 0 } = useWishlist() as { wishlistCount?: number };
+
+  // Local Cart State for Real API Data
+  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartLoading, setCartLoading] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // User state & hydration fix
   const [parsedUser, setParsedUser] = useState<{ name?: string } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
-  // Function to check user from localStorage safely
+  // Helper function to get token
+  const getToken = () => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem('token');
+  };
+
+  // 1. Fetch Cart from Backend (GET /api/cart)
+  const fetchCart = async () => {
+    const token = getToken();
+    if (!token) {
+      setCartItems([]);
+      return;
+    }
+
+    try {
+      setCartLoading(true);
+      const res = await api.get('/cart', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const resData = res.data || res;
+
+      // Backend cart items array ko set karein
+      // (Agar backend cart.items bhej raha ho toh resData.data.items ya resData.data)
+      const items = resData.data?.items || resData.data || [];
+      setCartItems(Array.isArray(items) ? items : []);
+    } catch (error: any) {
+      console.error("Cart fetch error:", error.response?.data || error.message);
+    } finally {
+      setCartLoading(false);
+    }
+  };
+
+  // 2. Remove Item from Cart (DELETE /api/cart/:itemId)
+  const handleRemoveFromCart = async (itemId: string) => {
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      // Optimistic update
+      setCartItems((prev) => prev.filter((item) => (item._id || item.id) !== itemId));
+
+      await api.delete(`/cart/item/${itemId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+    } catch (error: any) {
+      console.error("Remove from cart failed:", error.response?.data || error.message);
+      fetchCart();
+    }
+  };
+
+  // 3. Update Quantity (PUT /api/cart/:itemId)
+  const handleUpdateQuantity = async (itemId: string, newQty: number) => {
+    if (newQty <= 0) {
+      handleRemoveFromCart(itemId);
+      return;
+    }
+
+    const token = getToken();
+    if (!token) return;
+
+    try {
+      // Optimistic update
+      setCartItems((prev) =>
+        prev.map((item) =>
+          (item._id || item.id) === itemId ? { ...item, quantity: newQty } : item
+        )
+      );
+
+      await api.put(
+        `/cart/item/${itemId}`,
+        { quantity: newQty },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+    } catch (error: any) {
+      console.error("Update qty error:", error.response?.data || error.message);
+      fetchCart();
+    }
+  };
+
+  // Safe user check
   const checkUser = () => {
     if (typeof window === "undefined") return;
     const currentUser = localStorage.getItem('currentUser');
@@ -54,13 +119,16 @@ export default function Navbar() {
   useEffect(() => {
     setIsMounted(true);
     checkUser();
+    fetchCart();
 
     window.addEventListener('storage', checkUser);
     window.addEventListener('authChange', checkUser);
+    window.addEventListener('cartUpdated', fetchCart); // Custom event for global cart sync
 
     return () => {
       window.removeEventListener('storage', checkUser);
       window.removeEventListener('authChange', checkUser);
+      window.removeEventListener('cartUpdated', fetchCart);
     };
   }, []);
 
@@ -72,11 +140,15 @@ export default function Navbar() {
     { name: "Contact", href: "/contact" },
   ];
 
-  // Calculate total price accurately
+  // Total items count
+  const cartCount = cartItems.reduce((acc, item) => acc + (item.quantity || 1), 0);
+
+  // Total price calculation
   const totalPrice = cartItems.reduce((acc, item) => {
-    const cleanPrice = typeof item.price === 'string'
-      ? Number(item.price.replace(/[^0-9.-]+/g, ""))
-      : (item.price || 0);
+    const rawPrice = item.product?.discountPrice || item.product?.price || item.price || 0;
+    const cleanPrice = typeof rawPrice === 'string'
+      ? Number(rawPrice.replace(/[^0-9.-]+/g, ""))
+      : Number(rawPrice);
     return acc + (cleanPrice * (item.quantity || 1));
   }, 0);
 
@@ -118,7 +190,7 @@ export default function Navbar() {
               );
             })}
 
-            {/* --- ADMIN / DASHBOARD LINK (Desktop) --- */}
+            {/* ADMIN / DASHBOARD LINK */}
             <Link
               href="/dashboard"
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border transition-all ${
@@ -133,8 +205,7 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center space-x-2 sm:space-x-4 text-gray-700">
-            
-            {/* User Profile / Login Link */}
+            {/* User Profile */}
             <Link
               href={parsedUser ? "/account" : "/login"}
               className="hover:text-rose-600 p-1.5 rounded-full hover:bg-rose-50 transition-colors flex items-center gap-1.5 text-xs font-medium"
@@ -151,7 +222,7 @@ export default function Navbar() {
 
             {/* Wishlist Link */}
             <Link
-              href="/wishlist"
+              href="/dashboard/wishlist"
               className="hover:text-rose-600 p-1.5 rounded-full hover:bg-rose-50 transition-colors relative"
               aria-label="Wishlist"
             >
@@ -165,8 +236,11 @@ export default function Navbar() {
 
             {/* Cart Button */}
             <button
-              onClick={() => openCart && openCart()}
-              className="hover:text-rose-600 p-1.5 rounded-full hover:bg-rose-50 transition-colors relative"
+              onClick={() => {
+                setIsCartOpen(true);
+                fetchCart(); // Har baar open hone par latest cart fetch karein
+              }}
+              className="hover:text-rose-600 p-1.5 rounded-full hover:bg-rose-50 transition-colors relative cursor-pointer"
               aria-label="Cart"
             >
               <ShoppingBag className="w-5 h-5" />
@@ -175,7 +249,7 @@ export default function Navbar() {
                   cartCount > 0 ? "bg-rose-600 animate-pulse" : "bg-gray-400"
                 }`}
               >
-                {cartCount > 0 ? cartCount : 0}
+                {cartCount}
               </span>
             </button>
           </div>
@@ -183,7 +257,6 @@ export default function Navbar() {
         </div>
       </header>
 
-      {/* Spacer taaki fixed navbar content ke upar na aaye */}
       <div className="h-16" />
 
       {/* CART SLIDE-OVER DRAWER */}
@@ -191,18 +264,18 @@ export default function Navbar() {
         <div className="fixed inset-0 z-50 overflow-hidden">
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
-            onClick={() => closeCart && closeCart()}
+            onClick={() => setIsCartOpen(false)}
           />
           <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
             <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col">
 
               <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-amber-50/30">
                 <div className="flex items-center gap-2 text-amber-900 font-medium text-sm">
-                  <ArrowLeft className="w-5 h-5 cursor-pointer" onClick={() => closeCart && closeCart()} />
-                  <span>Cart Item ({cartCount})</span>
+                  <ArrowLeft className="w-5 h-5 cursor-pointer" onClick={() => setIsCartOpen(false)} />
+                  <span>Cart Items ({cartCount})</span>
                 </div>
                 <button
-                  onClick={() => closeCart && closeCart()}
+                  onClick={() => setIsCartOpen(false)}
                   className="p-1.5 rounded-full text-gray-500 hover:bg-gray-100"
                 >
                   <X className="w-6 h-6" />
@@ -210,7 +283,11 @@ export default function Navbar() {
               </div>
 
               <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-                {cartCount === 0 || cartItems.length === 0 ? (
+                {cartLoading ? (
+                  <div className="h-full flex items-center justify-center">
+                    <Loader2 className="w-8 h-8 text-rose-600 animate-spin" />
+                  </div>
+                ) : cartItems.length === 0 ? (
                   <div className="h-full flex flex-col items-center justify-center text-center">
                     <div className="w-20 h-20 bg-amber-100/60 rounded-full flex items-center justify-center mb-4 text-amber-700">
                       <ShoppingBag className="w-10 h-10" />
@@ -222,7 +299,7 @@ export default function Navbar() {
                       Add something beautiful to your cart.
                     </p>
                     <button
-                      onClick={() => closeCart && closeCart()}
+                      onClick={() => setIsCartOpen(false)}
                       className="bg-[#b9381e] hover:bg-[#a03019] text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all text-xs tracking-wider uppercase"
                     >
                       CONTINUE SHOPPING
@@ -230,59 +307,67 @@ export default function Navbar() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {cartItems.map((item: any, index: number) => (
-                      <div key={item.id || index} className="flex gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100 relative items-center">
-                        <img
-                          src={item.image || item.img || "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&q=80&w=200"}
-                          alt={item.name || "Product"}
-                          className="w-16 h-20 object-cover rounded-lg border border-gray-200"
-                        />
-                        <div className="flex-1 min-w-0 pr-6">
-                          <h4 className="font-medium text-gray-900 text-sm truncate">{item.name || item.title}</h4>
-                          <p className="text-xs text-gray-500 mt-0.5">Size: <span className="font-semibold text-gray-700">{item.size || 'M'}</span></p>
-                          <p className="text-rose-600 font-bold text-sm mt-1">{item.price || '₹3,496'}</p>
+                    {cartItems.map((item: any, index: number) => {
+                      const productObj = item.product || item;
+                      const title = productObj.title || productObj.name || "Product";
+                      const image = productObj.images?.[0] || productObj.image || "/placeholder.png";
+                      const price = productObj.discountPrice || productObj.price || item.price || 0;
+                      const itemId = item._id || item.id;
 
-                          <div className="flex items-center border border-gray-200 rounded mt-2 w-fit bg-white text-xs">
-                            <button
-                              onClick={() => updateQuantity && updateQuantity(item.id, (item.quantity || 1) - 1)}
-                              className="px-2 py-0.5 font-bold text-gray-600 hover:text-black"
-                            >
-                              -
-                            </button>
-                            <span className="px-2 py-0.5 font-semibold text-gray-800">{item.quantity || 1}</span>
-                            <button
-                              onClick={() => updateQuantity && updateQuantity(item.id, (item.quantity || 1) + 1)}
-                              className="px-2 py-0.5 font-bold text-gray-600 hover:text-black"
-                            >
-                              +
-                            </button>
+                      return (
+                        <div key={itemId || index} className="flex gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100 relative items-center">
+                          <img
+                            src={image}
+                            alt={title}
+                            className="w-16 h-20 object-cover rounded-lg border border-gray-200"
+                          />
+                          <div className="flex-1 min-w-0 pr-6">
+                            <h4 className="font-medium text-gray-900 text-sm truncate">{title}</h4>
+                            <p className="text-xs text-gray-500 mt-0.5">Size: <span className="font-semibold text-gray-700">{item.size || 'M'}</span></p>
+                            <p className="text-rose-600 font-bold text-sm mt-1">₹{Number(price).toLocaleString('en-IN')}</p>
+
+                            {/* Quantity Controls */}
+                            <div className="flex items-center border border-gray-200 rounded mt-2 w-fit bg-white text-xs">
+                              <button
+                                onClick={() => handleUpdateQuantity(itemId, (item.quantity || 1) - 1)}
+                                className="px-2 py-0.5 font-bold text-gray-600 hover:text-black cursor-pointer"
+                              >
+                                -
+                              </button>
+                              <span className="px-2 py-0.5 font-semibold text-gray-800">{item.quantity || 1}</span>
+                              <button
+                                onClick={() => handleUpdateQuantity(itemId, (item.quantity || 1) + 1)}
+                                className="px-2 py-0.5 font-bold text-gray-600 hover:text-black cursor-pointer"
+                              >
+                                +
+                              </button>
+                            </div>
                           </div>
-                        </div>
 
-                        {removeFromCart && (
+                          {/* Delete Item */}
                           <button
-                            onClick={() => removeFromCart(item.id)}
-                            className="absolute top-3 right-3 text-gray-400 hover:text-red-600 p-1 transition-colors"
+                            onClick={() => handleRemoveFromCart(itemId)}
+                            className="absolute top-3 right-3 text-gray-400 hover:text-red-600 p-1 transition-colors cursor-pointer"
                             title="Remove item"
                           >
                             <Trash2 className="w-4 h-4" />
                           </button>
-                        )}
-                      </div>
-                    ))}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </div>
 
-              {cartCount > 0 && cartItems.length > 0 && (
+              {cartItems.length > 0 && (
                 <div className="p-4 border-t border-gray-100 bg-white space-y-3">
                   <div className="flex justify-between items-center text-sm font-semibold text-gray-800">
                     <span>Subtotal:</span>
-                    <span className="text-rose-600 font-bold text-lg">₹{totalPrice.toLocaleString()}</span>
+                    <span className="text-rose-600 font-bold text-lg">₹{totalPrice.toLocaleString('en-IN')}</span>
                   </div>
                   <Link
                     href="/cart"
-                    onClick={() => closeCart && closeCart()}
+                    onClick={() => setIsCartOpen(false)}
                     className="block w-full bg-rose-600 hover:bg-rose-700 text-white text-center py-3.5 rounded-xl font-bold uppercase text-xs tracking-wider shadow-md transition-colors"
                   >
                     VIEW FULL CART & CHECKOUT
@@ -327,7 +412,6 @@ export default function Navbar() {
                   );
                 })}
 
-                {/* --- ADMIN / DASHBOARD LINK (Mobile) --- */}
                 <Link
                   href="/dashboard"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -347,7 +431,11 @@ export default function Navbar() {
             </div>
             <div className="p-4 border-t border-gray-100 bg-gray-50">
               <button
-                onClick={() => { setIsMobileMenuOpen(false); openCart && openCart(); }}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsCartOpen(true);
+                  fetchCart();
+                }}
                 className="flex items-center justify-between w-full bg-rose-600 text-white font-semibold py-3 px-4 rounded-xl text-xs uppercase tracking-wider shadow-md hover:bg-rose-700"
               >
                 <div className="flex items-center gap-2">

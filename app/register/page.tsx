@@ -13,17 +13,17 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    
   });
-const [loading, setLoading] = useState(false);
+
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
- const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    // 1. Password Match Validation
+    // 1. Client-side validations
     if (formData.password !== formData.confirmPassword) {
       setErrorMessage('Passwords do not match. Please verify and try again.');
       return;
@@ -37,14 +37,15 @@ const [loading, setLoading] = useState(false);
     setLoading(true);
 
     try {
-      // 2. Backend payload (confirmPassword backend nahi bhejna hota)
+      // 2. Clean payload for backend (stripping confirmPassword)
       const payload = {
         name: formData.name,
         email: formData.email,
         password: formData.password,
-        confirmPassword : formData.confirmPassword,
+        confirmPassword: formData.confirmPassword,
       };
 
+      // Agar aapke backend me route '/auth/register' hai to use rakhein, '/auth/signup' hai to wo rakhein
       const response = await API.post('/auth/signup', payload);
 
       const resData = response.data?.data || response.data;
@@ -77,10 +78,10 @@ const [loading, setLoading] = useState(false);
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-[85vh] flex items-center justify-center bg-gray-50/50 py-12 px-4 sm:px-6 lg:px-8 relative">
-      
-      {/* --- GREEN TOAST NOTIFICATION --- */}
+      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed top-6 z-50 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-bounce">
           <CheckCircle2 className="w-5 h-5" />
@@ -89,7 +90,6 @@ const [loading, setLoading] = useState(false);
       )}
 
       <div className="max-w-md w-full bg-white rounded-3xl shadow-xl border border-gray-100 p-8 sm:p-10 space-y-8">
-        
         <div className="text-center">
           <Link href="/" className="text-2xl font-bold tracking-wider text-rose-600 font-serif">
             KURTI<span className="text-gray-800">STORE</span>
@@ -97,7 +97,8 @@ const [loading, setLoading] = useState(false);
           <h2 className="mt-4 text-2xl font-serif font-bold text-gray-900">Create Account</h2>
           <p className="mt-1 text-xs text-gray-500">Join us for exclusive collection & updates</p>
         </div>
-  
+
+        {/* Error Alert Banner */}
         {errorMessage && (
           <div className="bg-rose-50 border border-rose-200 text-rose-600 px-4 py-3 rounded-xl text-xs flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
@@ -105,7 +106,7 @@ const [loading, setLoading] = useState(false);
           </div>
         )}
 
- <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-2">
               Full Name
@@ -201,7 +202,6 @@ const [loading, setLoading] = useState(false);
             Sign In
           </Link>
         </div>
-
       </div>
     </div>
   );
