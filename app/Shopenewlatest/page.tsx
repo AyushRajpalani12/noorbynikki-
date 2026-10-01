@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDown, Sparkles, ArrowUpRight } from 'lucide-react';
 import MyLooking from '@/components/MyLooking';
+import DynamicBanner from '@/components/DynamicBanner';
 
 
 export default function HeroBannerPage() {
@@ -68,37 +69,7 @@ export default function HeroBannerPage() {
     <main className="w-full min-h-screen bg-[#F8F4ED]">
       
    {/* HERO BANNER AT THE TOP */}
-    <div className="relative w-full h-[350px] sm:h-[420px] md:h-[480px] lg:h-[520px] overflow-hidden shadow-sm">
-      <Image
-        src="/collectionhomepage.png"
-        alt="Collection Header Banner"
-        fill
-        priority
-        className="object-cover object-center w-full h-full brightness-[1.05] contrast-[1.05]"
-      />
-      
-      {/* Balanced gradient overlay for sharp image visibility and crystal clear text */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/30 to-black/50 flex flex-col items-center justify-center text-center px-4">
-        <span className="text-rose-200 font-semibold tracking-widest text-xs uppercase mb-2 drop-shadow-md">
-          Elegance In Every Detail
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-serif font-bold text-white tracking-wide max-w-2xl leading-tight drop-shadow-lg">
-          Exclusive Royal Collection
-        </h1>
-        <p className="text-gray-100 text-sm sm:text-base mt-3 max-w-lg font-light drop-shadow">
-          Discover our handpicked traditional suits, custom designer kurtis, and timeless Ethnic wear created for every occasion.
-        </p>
-        
-        <button
-          suppressHydrationWarning
-          onClick={scrollToProducts}
-          className="mt-6 inline-flex items-center gap-2 bg-rose-600 hover:bg-rose-700 text-white font-bold py-3 px-8 rounded-full shadow-xl transition-all transform hover:-translate-y-0.5 text-xs sm:text-sm uppercase tracking-wider cursor-pointer"
-        >
-          Explore Our Products
-          <ArrowDown className="w-4 h-4 animate-bounce" />
-        </button>
-      </div>
-    </div>
+    <DynamicBanner position="shop new latest" targetId="latest-products-grid" />
       {/* PRODUCTS SECTION WITH CONTINUOUS AUTO-SCROLL */}
       <div ref={productsRef} className="w-full py-16 px-4 sm:px-8 max-w-7xl mx-auto overflow-hidden">
         

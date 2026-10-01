@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import React, { useEffect, useState, Suspense } from 'react';
+import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Sparkles, ShoppingBag, X, Zap, Check } from 'lucide-react';
@@ -24,16 +24,19 @@ interface Product {
   featuredBadge?: string;
   sizes?: ProductSize[];
   category?: {
-    name: string;
+    _id?: string;
+    name?: string;
+    slug?: string;
   } | string;
 }
 
-export default function FeaturedBadgeListingPage() {
+function CollectionListingContent() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const router = useRouter();
 
-  // URL se badge extract karte hain (e.g., 'exclusive', 'bestseller')
-  const badgeName =
+  const categoryParam = searchParams.get('category') || '';
+  const badgeParam =
     typeof params?.badge === 'string'
       ? params.badge.toUpperCase()
       : Array.isArray(params?.badge)
@@ -44,43 +47,54 @@ export default function FeaturedBadgeListingPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [isActionLoading, setIsActionLoading] = useState<boolean>(false);
 
-  // Center Modal states
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
   const [modalMode, setModalMode] = useState<'BAG' | 'BUY'>('BAG');
   const [selectedSize, setSelectedSize] = useState<string>('');
   const [addedNotice, setAddedNotice] = useState<string | null>(null);
 
-  // 1. Fetch only products with matching badge
   useEffect(() => {
-    if (!badgeName) return;
-
     let isMounted = true;
 
-    const fetchBadgeProducts = async () => {
+    const fetchProducts = async () => {
       try {
         setLoading(true);
-        const res = await api.get(`/products?featuredBadge=${badgeName}`);
+
+        let endpoint = '/products?limit=50';
+
+        // Backend service category param koObjectId ya slug se match karta hai
+        if (categoryParam) {
+          endpoint += `&category=${encodeURIComponent(categoryParam)}`;
+        } else if (badgeParam && badgeParam !== 'COLLECTION') {
+          endpoint += `&featuredBadge=${encodeURIComponent(badgeParam)}`;
+        }
+
+        const res = await api.get(endpoint);
         const resData = res.data || res;
+        const serviceData = resData.data || resData;
 
         if (isMounted) {
-          setProducts(resData.data || []);
+          const items = Array.isArray(serviceData?.data)
+            ? serviceData.data
+            : Array.isArray(serviceData)
+            ? serviceData
+            : [];
+          setProducts(items);
         }
       } catch (error) {
-        console.error('Failed to load featured products:', error);
+        console.error('Failed to load products:', error);
         if (isMounted) setProducts([]);
       } finally {
         if (isMounted) setLoading(false);
       }
     };
 
-    fetchBadgeProducts();
+    fetchProducts();
 
     return () => {
       isMounted = false;
     };
-  }, [badgeName]);
+  }, [categoryParam, badgeParam]);
 
-  // Open modal for size selection
   const handleOpenModal = (e: React.MouseEvent, product: Product, mode: 'BAG' | 'BUY') => {
     e.stopPropagation();
     setModalProduct(product);
@@ -94,7 +108,6 @@ export default function FeaturedBadgeListingPage() {
     setSelectedSize('');
   };
 
-  // Submit Modal Action
   const handleModalConfirm = async () => {
     if (!modalProduct) return;
 
@@ -146,11 +159,21 @@ export default function FeaturedBadgeListingPage() {
     }
   };
 
+  const categoryName =
+    products[0]?.category && typeof products[0].category === 'object'
+      ? products[0].category.name
+      : categoryParam;
+
+  const displayTitle = categoryParam
+    ? `${categoryName || 'CATEGORY'} COLLECTION`.toUpperCase()
+    : badgeParam && badgeParam !== 'COLLECTION'
+    ? `${badgeParam} COLLECTION`
+    : 'CURATED COLLECTION';
+
   return (
     <main className="min-h-screen bg-[#FDFBF7] px-4 py-8 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-[1320px]">
         
-        {/* Toast Alert */}
         {addedNotice && (
           <div className="fixed right-6 top-6 z-50 flex items-center gap-2 rounded-2xl bg-[#1f1917] px-5 py-3 text-xs font-semibold text-white shadow-xl">
             <Check className="h-4 w-4 text-emerald-400" />
@@ -158,7 +181,6 @@ export default function FeaturedBadgeListingPage() {
           </div>
         )}
 
-        {/* Back Button */}
         <div className="mb-6 flex items-center justify-between">
           <Link
             href="/"
@@ -169,7 +191,6 @@ export default function FeaturedBadgeListingPage() {
           </Link>
         </div>
 
-        {/* Header */}
         <div className="flex flex-col items-center justify-center text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#e8dcd2] bg-white px-4 py-1 shadow-sm">
             <Sparkles className="h-3.5 w-3.5 text-[#7a1738]" />
@@ -179,28 +200,24 @@ export default function FeaturedBadgeListingPage() {
           </div>
 
           <h1 className="mt-3 font-serif text-3xl font-bold tracking-tight text-[#221714] sm:text-4xl lg:text-5xl">
-            {badgeName} Collection
+            {displayTitle}
           </h1>
           <p className="mt-2 text-xs uppercase tracking-widest text-[#8c7e75]">
             Handcrafted pieces tailored for celebrations
           </p>
         </div>
 
-        {/* Loading / Empty */}
         {loading && <div className="py-24 text-center text-sm text-stone-500">Loading collection...</div>}
         {!loading && products.length === 0 && (
           <div className="py-24 text-center text-sm text-stone-500">
-            No products found under {badgeName} collection.
+            No products found for this selection.
           </div>
         )}
 
-        {/* Product Cards Grid */}
         {!loading && products.length > 0 && (
           <div className="mt-12 grid grid-cols-1 gap-7 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {products.map((product) => {
               const prodId = product._id || product.id;
-              
-              // ✅ EXACT DETAIL PAGE LINK (Ye wahi page kholega jo abhi humne banaya)
               const productDetailUrl = `/product?id=${prodId}`;
               
               const imageSrc = product.images?.[0] || '/mynewlook.png';
@@ -218,7 +235,6 @@ export default function FeaturedBadgeListingPage() {
                   key={prodId}
                   className="group relative flex flex-col justify-between overflow-hidden rounded-[22px] border border-[#eee5dc] bg-white p-3.5 shadow-sm transition-all duration-300 hover:shadow-md"
                 >
-                  {/* 1. PHOTO & TITLE CLICKABLE -> Direct Product Detail Page */}
                   <Link href={productDetailUrl} className="block">
                     <div className="relative aspect-[3/4] w-full overflow-hidden rounded-[16px] bg-[#f9f6f0]">
                       <Image
@@ -229,7 +245,7 @@ export default function FeaturedBadgeListingPage() {
                         className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                       />
                       <span className="absolute left-3 top-3 rounded-full border border-white/20 bg-[#2b2523]/80 px-3 py-1 text-[8px] font-bold uppercase tracking-[0.2em] text-white backdrop-blur-md">
-                        {product.featuredBadge || badgeName}
+                        {product.featuredBadge || categoryTitle}
                       </span>
                     </div>
 
@@ -243,14 +259,12 @@ export default function FeaturedBadgeListingPage() {
                     </div>
                   </Link>
 
-                  {/* Price */}
                   <div className="mt-2 px-1">
                     <span className="text-base font-bold text-[#8a2045]">
                       ₹{Number(price).toLocaleString('en-IN')}
                     </span>
                   </div>
 
-                  {/* Two Buttons: Bag & Buy */}
                   <div className="mt-3 grid grid-cols-2 gap-2 border-t border-stone-100 pt-3">
                     <button
                       type="button"
@@ -276,7 +290,6 @@ export default function FeaturedBadgeListingPage() {
           </div>
         )}
 
-        {/* Center Modal for Size Selection */}
         {modalProduct && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
             <div className="absolute inset-0" onClick={handleCloseModal} />
@@ -313,7 +326,6 @@ export default function FeaturedBadgeListingPage() {
                 </div>
               </div>
 
-              {/* Sizes */}
               <div className="mt-6 border-t border-stone-100 pt-4">
                 <div className="mb-3 flex items-center justify-between">
                   <span className="text-xs font-bold uppercase tracking-wider text-stone-600">
@@ -367,7 +379,6 @@ export default function FeaturedBadgeListingPage() {
                 </div>
               </div>
 
-              {/* Submit */}
               <button
                 type="button"
                 disabled={isActionLoading}
@@ -394,5 +405,13 @@ export default function FeaturedBadgeListingPage() {
 
       </div>
     </main>
+  );
+}
+
+export default function FeaturedBadgeListingPage() {
+  return (
+    <Suspense fallback={<div className="py-24 text-center text-sm text-stone-500">Loading collection...</div>}>
+      <CollectionListingContent />
+    </Suspense>
   );
 }
